@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use Yii;
@@ -23,149 +24,152 @@ class OrderController extends Controller
 	private $_ip = '';
 	private $_referer = null;
 	private $_action_started_at = null;
-	
-	//---------------------------------------------------------------------------
-    public function behaviors()
-	//---------------------------------------------------------------------------
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => [],
-                'rules' => [
-                    [
-                        'actions' => ['test','index'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                ],
-            ],
-        ];
-    }
-	
-	//---------------------------------------------------------------------------
-    protected function verbs()
-	//---------------------------------------------------------------------------
-    {
-       return [
-           'test' => ['GET'],
-           'index' => ['GET'],
-       ];
-    }
-	
-	//---------------------------------------------------------------------------
-    public function actionTest()
-	//---------------------------------------------------------------------------
-    {		
-		echo 'WORK('.YII_DEBUG.')';
-    }	
 
 	//---------------------------------------------------------------------------
-    public function actionIndex()
+	public function behaviors()
 	//---------------------------------------------------------------------------
-    {
+	{
+		return [
+			'access' => [
+				'class' => AccessControl::className(),
+				'only' => [],
+				'rules' => [
+					[
+						'actions' => ['test', 'index'],
+						'allow' => true,
+						'roles' => ['?'],
+					],
+				],
+			],
+		];
+	}
+
+	//---------------------------------------------------------------------------
+	protected function verbs()
+	//---------------------------------------------------------------------------
+	{
+		return [
+			'test' => ['GET'],
+			'index' => ['GET'],
+		];
+	}
+
+	//---------------------------------------------------------------------------
+	public function actionTest()
+	//---------------------------------------------------------------------------
+	{
+		echo 'WORK(' . YII_DEBUG . ')';
+	}
+
+	//---------------------------------------------------------------------------
+	public function actionIndex()
+	//---------------------------------------------------------------------------
+	{
 		//пока пусть будет общее
 		//if (is_null($this->referer))
 		//	$this->redirect($this->baseUrlRedirect);
-	
-		$uid = Yii::$app->request->get('uid', ''); 
+
+		$uid = Yii::$app->request->get('uid', '');
 		if (is_null($uid))
 			$this->redirect($this->baseUrlRedirect);
-			//throw new NotFoundHttpException('404');
-			
-		$order = Orders::findOrderByUid($uid); 
+		//throw new NotFoundHttpException('404');
+
+		$order = Orders::findOrderByUid($uid);
 		//если не найден
 		//if (is_null($order))
 		//	return $this->redirect(['error']);
-		
-		
+
+
 		//какое то действие отправки в 1с
 		// Yii::$app->queue->push(new SendTo1CJob([
-			// 'id' => $request_data['id'],
-			// 'hs' => $base['hs']
+		// 'id' => $request_data['id'],
+		// 'hs' => $base['hs']
 		// ]));
-		
+
 		//var_dump($uid);
 
-		
-		return $this->render('success',[
-            'name' => 'Результат',
-            'message' => 'Успешно',
-            'order' => $order,
-        ]);
-    }
+		$data_attributes = $this->attributesFromData($order->data);
+		$data_tables = $this->tablesFromData($order->data);
+		return $this->render('success', [
+			'name' => 'Результат',
+			'message' => 'Успешно',
+			'order' => $order,
+			'data_attributes' => $data_attributes,
+			'data_tables' => $data_tables,
+		]);
+	}
 
 	//---------------------------------------------------------------------------
-    protected function setIP($ip)
+	protected function setIP($ip)
 	//---------------------------------------------------------------------------
-    {
-       $this->_ip = $ip;
-    }
-	
+	{
+		$this->_ip = $ip;
+	}
+
 	//---------------------------------------------------------------------------
-    protected function setReferer()
+	protected function setReferer()
 	//---------------------------------------------------------------------------
-    {
-       $this->_referer = isset($_SERVER["HTTP_REFERER"]) ? ( $_SERVER["HTTP_REFERER"] != '' ? $_SERVER["HTTP_REFERER"] : null ) : null;
-    }
-	
+	{
+		$this->_referer = isset($_SERVER["HTTP_REFERER"]) ? ($_SERVER["HTTP_REFERER"] != '' ? $_SERVER["HTTP_REFERER"] : null) : null;
+	}
+
 	//---------------------------------------------------------------------------
-    protected function setActionStartedAt($started_at)
+	protected function setActionStartedAt($started_at)
 	//---------------------------------------------------------------------------
-    {
-       $this->_action_started_at = $started_at;
-    }
-	
+	{
+		$this->_action_started_at = $started_at;
+	}
+
 	//---------------------------------------------------------------------------
-    protected function getBaseUrlRedirect()
+	protected function getBaseUrlRedirect()
 	//---------------------------------------------------------------------------
-    {
-       return $this->_baseurl_redirect;
-    }
-	
+	{
+		return $this->_baseurl_redirect;
+	}
+
 	//---------------------------------------------------------------------------
-    protected function getIP()
+	protected function getIP()
 	//---------------------------------------------------------------------------
-    {
-       return $this->_ip;
-    }
-	
+	{
+		return $this->_ip;
+	}
+
 	//---------------------------------------------------------------------------
-    protected function getReferer()
+	protected function getReferer()
 	//---------------------------------------------------------------------------
-    {
-       return $this->_referer;
-    }
-	
+	{
+		return $this->_referer;
+	}
+
 	//---------------------------------------------------------------------------
-    protected function getActionStartedAt()
+	protected function getActionStartedAt()
 	//---------------------------------------------------------------------------
-    {
-       return $this->_action_started_at;
-    }
-	
+	{
+		return $this->_action_started_at;
+	}
+
 	//---------------------------------------------------------------------------
 	public function beforeAction($action)
 	//---------------------------------------------------------------------------
-	{				
+	{
 		$this->setActionStartedAt(date('Y-m-d H:i:s'));
 		$this->setIP(Yii::$app->request->userIP);
 		$this->setReferer();
-			
+
 		return parent::beforeAction($action);
 	}
-	
+
 	//---------------------------------------------------------------------------
 	public function afterAction($action, $result)
 	//---------------------------------------------------------------------------
-	{			
+	{
 		$result = parent::afterAction($action, $result);
-		
+
 		$params = [
 			'_GET' => Yii::$app->request->get(),
 			'_POST' => Yii::$app->request->post(),
 		];
-		
+
 		// модель для ведения лога
 		// $method_log = new MethodLog;
 		// $method_log->ip = $this->ip;	
@@ -175,7 +179,21 @@ class OrderController extends Controller
 		// $method_log->referer = $this->referer;
 		// $method_log->started_at = $this->actionStartedAt;
 		// $method_log->save(false);
-				
+
 		return $result;
+	}
+
+	private function attributesFromData(string $data)
+	{
+		$data_object = json_decode($data);
+
+		return $data_object->attributes;
+	}
+
+	private function tablesFromData(string $data)
+	{
+		$data_object = json_decode($data);
+
+		return $data_object->tables;
 	}
 }
