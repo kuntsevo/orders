@@ -26,7 +26,8 @@ class Bases extends ActiveRecord
     {
         return [
 			[['id'], 'string', 'max' => 36],
-			[['name', 'hs'], 'string', 'max' => 50],        
+			[['name'], 'string', 'max' => 40],        
+			[['hs'], 'string', 'max' => 255],
         ];
     }
 	
@@ -45,10 +46,7 @@ class Bases extends ActiveRecord
     public static function findBase($id)
 	//---------------------------------------------------------------------------
     {
-        return static::find()
-				->where(['id' => $id])		
-				->orderBy('id DESC')
-				->one();
+        return static::findOne($id);
     }
 	
 	//---------------------------------------------------------------------------
