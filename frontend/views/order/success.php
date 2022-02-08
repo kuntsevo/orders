@@ -9,6 +9,9 @@ use yii\helpers\Html;
 
 $this->title = $name;
 
+$vehicle = $order->vehicle;
+$vehicle_data = json_decode($vehicle->data)->attributes;
+
 ?>
 <div class="site-success">
 
@@ -20,6 +23,11 @@ $this->title = $name;
     </div>
 
     <h3><?= Html::encode($order->dealer->name) ?></h3>
+
+    <p class="lead">
+        <?= Html::encode($vehicle_data->brand), ' ', Html::encode($vehicle_data->model), ' ', Html::encode($vehicle->registration_number) ?>
+    </p>
+
     <div class="container">
         <div class="row justify-content-md-left">
             <div class="col-md-auto">

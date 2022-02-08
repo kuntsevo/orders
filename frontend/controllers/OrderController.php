@@ -70,11 +70,13 @@ class OrderController extends Controller
 		//	$this->redirect($this->baseUrlRedirect);
 
 		$uid = Yii::$app->request->get('uid', '');
+		$customer_id = Yii::$app->request->get('id', '');
 		if (is_null($uid))
 			$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
 
 		$order = Orders::findOrderByUid($uid);
+		$customer_orders = Orders::getOrdersByCustomer($customer_id);
 		//если не найден
 		//if (is_null($order))
 		//	return $this->redirect(['error']);

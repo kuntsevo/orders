@@ -4,24 +4,20 @@ namespace frontend\models;
 
 use \yii\db\ActiveRecord;
 
-class Orders extends ActiveRecord
+class Vehicles extends ActiveRecord
 {
-	const PTYPE_EKV_SBER = 1;
-	const PTYPE_EK_MKB = 2;
-	const PTYPE_QR_SBER = 3;
-
 	//---------------------------------------------------------------------------
 	public static function tableName()
 	//---------------------------------------------------------------------------
 	{
-		return '{{Orders}}';
+		return '{{Vehicles}}';
 	}
 
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
 	//---------------------------------------------------------------------------
 	{
-		return ['uid'];
+		return ['vin'];
 	}
 
 	//---------------------------------------------------------------------------
@@ -29,8 +25,8 @@ class Orders extends ActiveRecord
 	//---------------------------------------------------------------------------
 	{
 		return [
-			[['uid'], 'string', 'max' => 36],
-			[['number'], 'string', 'max' => 11],
+			[['vin'], 'string', 'max' => 17],
+			[['registration_number'], 'string', 'max' => 10],
 		];
 	}
 
@@ -39,30 +35,16 @@ class Orders extends ActiveRecord
 	//---------------------------------------------------------------------------
 	{
 		return [
-			'uid' => 'GUID в 1с',
-			'number' => 'Номер',
+			'vin' => 'ВИН',
+			'registration_number' => 'Государственный регистрационный номер',
 		];
 	}
 
-	public function getDealer()
-	{
-		return $this->hasOne(Dealers::class, ['uid' => 'dealer_id']);
-	}
-
-	public function getVehicle()
-	{
-		return $this->hasOne(Vehicles::class, ['vin' => 'vehicle_id']);
-	}
-
-	public static function getOrdersByCustomer($id)
-	{
-		static::find()->where(['customer_id' => $id, 'is_archived' => false]);
-	}
 	//---------------------------------------------------------------------------
-	public static function findOrderByUid($uid)
+	public static function findVehicle($vin)
 	//---------------------------------------------------------------------------
 	{
-		return static::findOne($uid);
+		return static::findOne($vin);
 	}
 
 	//---------------------------------------------------------------------------
