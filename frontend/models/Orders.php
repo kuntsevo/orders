@@ -14,7 +14,7 @@ class Orders extends ActiveRecord
 	public static function tableName()
 	//---------------------------------------------------------------------------
 	{
-		return 'Orders';
+		return '{{Orders}}';
 	}
 
 	//---------------------------------------------------------------------------
@@ -44,15 +44,16 @@ class Orders extends ActiveRecord
 		];
 	}
 
+	public function getDealer()
+	{
+		return $this->hasOne(Dealers::class, ['uid' => 'dealer_id']);
+	}
+
 	//---------------------------------------------------------------------------
 	public static function findOrderByUid($uid)
 	//---------------------------------------------------------------------------
 	{
 		return static::findOne($uid);
-		// return static::find()
-		// 		->where(['uid' => $uid])		
-		// 		->orderBy('uid DESC')
-		// 		->one();
 	}
 
 	//---------------------------------------------------------------------------

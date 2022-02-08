@@ -19,7 +19,7 @@ $this->title = $name;
         <?= nl2br(Html::encode($message)) ?>
     </div>
 
-    <h3><?= Html::encode($order->dealer_id) ?></h3>
+    <h3><?= Html::encode($order->dealer->name) ?></h3>
     <div class="container">
         <div class="row justify-content-md-left">
             <div class="col-md-auto">
