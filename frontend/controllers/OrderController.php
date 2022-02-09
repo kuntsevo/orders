@@ -14,6 +14,7 @@ use yii\filters\AccessControl;
 use frontend\models\Orders;
 use frontend\models\Bases;
 use common\jobs\SendTo1CJob;
+use frontend\models\Customers;
 
 /**
  * Site controller
@@ -71,12 +72,14 @@ class OrderController extends Controller
 
 		$uid = Yii::$app->request->get('uid', '');
 		$customer_id = Yii::$app->request->get('id', '');
-		if (is_null($uid))
-			$this->redirect($this->baseUrlRedirect);
+
+		// if (is_null($uid))
+		// 	$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
 
-		$order = Orders::findOrderByUid($uid);
+		// $order = Orders::findOrderByUid($uid);
 		$customer_orders = Orders::getOrdersByCustomer($customer_id);
+		$customer = Customers::findCustomer($customer_id);
 		//если не найден
 		//if (is_null($order))
 		//	return $this->redirect(['error']);
@@ -90,14 +93,12 @@ class OrderController extends Controller
 
 		//var_dump($uid);
 
-		$data_attributes = $this->attributesFromData($order->data);
-		$data_tables = $this->tablesFromData($order->data);
+
 		return $this->render('success', [
 			'name' => 'Результат',
 			'message' => 'Успешно',
-			'order' => $order,
-			'data_attributes' => $data_attributes,
-			'data_tables' => $data_tables,
+			'orders' => $customer_orders,
+			'customer' => $customer,
 		]);
 	}
 

@@ -9,5 +9,11 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'formatter' => [
+            'dateFormat' => 'dd.MM.yyyy',
+            'decimalSeparator' => '.',
+            'thousandSeparator' => ' ',
+            'currencyCode' => 'RUB',
+        ],
     ],
 ];
