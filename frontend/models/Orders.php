@@ -6,9 +6,9 @@ use \yii\db\ActiveRecord;
 
 class Orders extends ActiveRecord
 {
-	const PTYPE_EKV_SBER = 1;
-	const PTYPE_EK_MKB = 2;
-	const PTYPE_QR_SBER = 3;
+	//const PTYPE_EKV_SBER = 1;
+	//const PTYPE_EK_MKB = 2;
+	//const PTYPE_QR_SBER = 3;
 
 	//---------------------------------------------------------------------------
 	public static function tableName()
@@ -61,7 +61,9 @@ class Orders extends ActiveRecord
 
 	public static function getOrdersByCustomer($id)
 	{
-		static::find()->where(['customer_id' => $id, 'is_archived' => false]);
+		return static::find()
+			->where(['customer_id' => $id, 'is_archived' => false])
+			->all();
 	}
 	//---------------------------------------------------------------------------
 	public static function findOrderByUid($uid)
