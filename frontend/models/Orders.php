@@ -39,9 +39,14 @@ class Orders extends ActiveRecord
 	//---------------------------------------------------------------------------
 	{
 		return [
-			'uid' => 'GUID в 1с',
+			'uid' => 'GUID в 1C',
 			'number' => 'Номер',
 		];
+	}
+
+	public function getCustomer()
+	{
+		return $this->hasOne(Customers::class, ['uid' => 'customer_id']);
 	}
 
 	public function getDealer()
