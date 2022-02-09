@@ -4,20 +4,20 @@ namespace frontend\models;
 
 use \yii\db\ActiveRecord;
 
-class Bases extends ActiveRecord
+class Dealers extends ActiveRecord
 {
 	//---------------------------------------------------------------------------
 	public static function tableName()
 	//---------------------------------------------------------------------------
 	{
-		return '{{Bases}}';
+		return '{{Dealers}}';
 	}
 
 	//---------------------------------------------------------------------------
     public static function primaryKey()
 	//---------------------------------------------------------------------------
     {
-        return ['id'];
+        return ['uid'];
     }
 
 	//---------------------------------------------------------------------------
@@ -25,9 +25,8 @@ class Bases extends ActiveRecord
 	//---------------------------------------------------------------------------
     {
         return [
-			[['id'], 'string', 'max' => 36],
-			[['name'], 'string', 'max' => 40],        
-			[['hs'], 'string', 'max' => 255],
+			[['uid'], 'string', 'max' => 36],
+			[['name'], 'string', 'max' => 150],        
         ];
     }
 	
@@ -36,17 +35,16 @@ class Bases extends ActiveRecord
 	//---------------------------------------------------------------------------
     {
         return [
-            'id' =>'ID',          
-            'name' =>'Имя',                   
-            'hs' =>'HTTP Сервис',                   
+            'uid' => 'GUID в 1с',
+            'name' =>'Название ДЦ',                   
         ];
     }
 	
 	//---------------------------------------------------------------------------
-    public static function findBase($id)
+    public static function findDealer($uid)
 	//---------------------------------------------------------------------------
     {
-        return static::findOne($id);
+        return static::findOne($uid);
     }
 	
 	//---------------------------------------------------------------------------
