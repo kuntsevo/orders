@@ -16,7 +16,7 @@ class Orders extends ActiveRecord
 			'class' => DataExtractor::class,
 		];
 	}
-	
+
 	//---------------------------------------------------------------------------
 	public static function tableName()
 	//---------------------------------------------------------------------------
@@ -64,6 +64,11 @@ class Orders extends ActiveRecord
 	public function getVehicle()
 	{
 		return $this->hasOne(Vehicles::class, ['vin' => 'vehicle_id']);
+	}
+
+	public function getStaff()
+	{
+		return $this->hasOne(Staff::class, ['uid' => 'manager_id']);
 	}
 
 	public static function getOrdersByCustomer($id)
