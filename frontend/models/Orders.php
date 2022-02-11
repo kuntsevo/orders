@@ -10,6 +10,13 @@ class Orders extends ActiveRecord
 	//const PTYPE_EK_MKB = 2;
 	//const PTYPE_QR_SBER = 3;
 
+	public function behaviors()
+	{
+		return [
+			'class' => DataExtractor::class,
+		];
+	}
+	
 	//---------------------------------------------------------------------------
 	public static function tableName()
 	//---------------------------------------------------------------------------
@@ -61,9 +68,12 @@ class Orders extends ActiveRecord
 
 	public static function getOrdersByCustomer($id)
 	{
-		return static::find()
+
+		$order = static::find()
 			->where(['customer_id' => $id, 'is_archived' => false])
 			->all();
+
+		return $order;
 	}
 	//---------------------------------------------------------------------------
 	public static function findOrderByUid($uid)

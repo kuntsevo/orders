@@ -6,6 +6,13 @@ use \yii\db\ActiveRecord;
 
 class Vehicles extends ActiveRecord
 {
+	public function behaviors()
+	{
+		return [
+			'class' => DataExtractor::class,
+		];
+	}
+
 	//---------------------------------------------------------------------------
 	public static function tableName()
 	//---------------------------------------------------------------------------

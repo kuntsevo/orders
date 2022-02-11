@@ -69,10 +69,10 @@ class OrderController extends Controller
 		//пока пусть будет общее
 		//if (is_null($this->referer))
 		//	$this->redirect($this->baseUrlRedirect);
-
-		$uid = Yii::$app->request->get('uid', '');
+		
+		// $uid = Yii::$app->request->get('uid', '');
 		$customer_id = Yii::$app->request->get('id', '');
-
+		
 		// if (is_null($uid))
 		// 	$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
@@ -93,10 +93,9 @@ class OrderController extends Controller
 
 		//var_dump($uid);
 
+		$this->view->title = 'История обслуживания';
 
-		return $this->render('success', [
-			'name' => 'Результат',
-			'message' => 'Успешно',
+		return $this->render('orderList', [
 			'orders' => $customer_orders,
 			'customer' => $customer,
 		]);

@@ -5,7 +5,14 @@ namespace frontend\models;
 use \yii\db\ActiveRecord;
 
 class Customers extends ActiveRecord
-{
+{	
+	public function behaviors()
+	{
+		return [
+			'class' => DataExtractor::class,
+		];
+	}
+
 	//---------------------------------------------------------------------------
 	public static function tableName()
 	//---------------------------------------------------------------------------
