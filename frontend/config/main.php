@@ -54,9 +54,10 @@ return [
     ],
     'aliases' => [
         //---------------------------------------------------------------------------
-        // псевдонимы маршрутов
+        // псевдонимы URL
         '@orders' => '/',
         '@orderItem' => 'order/show-order',
+        '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
     ],
     'params' => $params,

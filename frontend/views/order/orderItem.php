@@ -46,17 +46,18 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Мастер-консультант:
+                <p class="fw-bold">Мастер-консультант:</p>                
                 </div>
             </div>
 
-            <div class="row justify-content-md-left">
-                <div class="d-flex flex-row bd-highlight mb-3 align-items-center">
-                    <div class="bd-highlight border border-primary rounded">
-                        <div class="col-md-auto">
-                            <?= Html::encode($staff_data->name) ?>
-                        </div>
-                        <div class="col-md-auto">
+            <div class="card my-2 py-1 border border-primary rounded" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <?= Html::img($order->staff->photo, ['alt' => Html::encode($staff_data->name), 'class' => 'img-fluid rounded-start']) ?>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= Html::encode($staff_data->name) ?></h5>
                             <?= Html::encode($staffInfo->work_phone) ?>
                         </div>
                     </div>
@@ -137,7 +138,7 @@ use yii\helpers\Html;
                 </div>
             </div>
 
-            <div class="d-grid gap-2">
+            <div class="d-grid gap-2 pt-3">
                 <button class="btn btn-primary" type="submit">Оплатить</button>
             </div>
         </div>

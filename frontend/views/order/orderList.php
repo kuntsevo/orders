@@ -66,7 +66,7 @@ $customer_data = $customer->dataAttributes();
                             <?= Html::encode(Yii::$app->formatter->asCurrency(($order_attributes->amount - $order_attributes->payment_amount))) ?>
                         </div>
                     </div>
-                    <div class="d-grid gap-2">
+                    <div class="d-grid gap-2 pt-3">
                         <button class="btn btn-primary" type="submit">Оплатить</button>
                         <?= Html::a('Подробнее', ['@orderItem', 'order_id' => $order->uid], ['class' => 'btn btn-outline-primary', 'role' => 'button'])  ?>
                     </div>
