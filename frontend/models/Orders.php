@@ -2,8 +2,8 @@
 
 namespace frontend\models;
 
+use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
-use yii\db\Query;
 
 class Orders extends ActiveRecord
 {
@@ -11,19 +11,7 @@ class Orders extends ActiveRecord
 	//const PTYPE_EK_MKB = 2;
 	//const PTYPE_QR_SBER = 3;
 
-	public function behaviors()
-	{
-		return [
-			'class' => DataExtractor::class,
-		];
-	}
-
-	//---------------------------------------------------------------------------
-	public static function tableName()
-	//---------------------------------------------------------------------------
-	{
-		return '{{Orders}}';
-	}
+	use DataExtractor;
 
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
@@ -88,7 +76,7 @@ class Orders extends ActiveRecord
 
 		$order = static::find()
 			->with(['dealer', 'vehicle'])
-			->where(['customer_id' => $id, 'is_archived' => false])
+			->where(['customer_id' => $id, 'is_archived' => 0])
 			->all();
 
 		return $order;

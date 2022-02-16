@@ -2,23 +2,12 @@
 
 namespace frontend\models;
 
+use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
 
 class Customers extends ActiveRecord
 {	
-	public function behaviors()
-	{
-		return [
-			'class' => DataExtractor::class,
-		];
-	}
-
-	//---------------------------------------------------------------------------
-	public static function tableName()
-	//---------------------------------------------------------------------------
-	{
-		return '{{Customers}}';
-	}
+	use DataExtractor;
 
 	//---------------------------------------------------------------------------
     public static function primaryKey()
