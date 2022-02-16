@@ -87,6 +87,7 @@ class Orders extends ActiveRecord
 	{
 
 		$order = static::find()
+			->with(['dealer', 'vehicle'])
 			->where(['customer_id' => $id, 'is_archived' => false])
 			->all();
 
