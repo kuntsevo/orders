@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'queue'],
     'controllerNamespace' => 'frontend\controllers',
+    'defaultRoute' => 'order/index',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -39,17 +40,18 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-			'enableStrictParsing' => true, //только перечисленные ниже
+            'enableStrictParsing' => true, //только перечисленные ниже
             'rules' => [
-				'/' => 'order/index',
-                'test' => 'order/test',
+                // '/' => 'order/index',
+                '<action:(|show-order|test)>' => 'order/<action>',
+                // 'test' => 'order/test',
             ],
         ],
-		'queue' => [
+        'queue' => [
             'class' => \yii\queue\file\Queue::class,
             'path' => '@console/runtime/queue',
             'as log' => \yii\queue\LogBehavior::class,
-			'attempts' => 1,
+            'attempts' => 1,
         ],
     ],
     'params' => $params,
