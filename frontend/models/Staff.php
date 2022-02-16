@@ -5,7 +5,7 @@ namespace frontend\models;
 use \yii\db\ActiveRecord;
 
 class Staff extends ActiveRecord
-{	
+{
 	public function behaviors()
 	{
 		return [
@@ -21,51 +21,52 @@ class Staff extends ActiveRecord
 	}
 
 	//---------------------------------------------------------------------------
-    public static function primaryKey()
+	public static function primaryKey()
 	//---------------------------------------------------------------------------
-    {
-        return ['uid'];
-    }
+	{
+		return ['uid'];
+	}
 
 	//---------------------------------------------------------------------------
-    public function rules()
+	public function rules()
 	//---------------------------------------------------------------------------
-    {
-        return [
+	{
+		return [
 			[['uid'], 'string', 'max' => 36],
-			[['photo'], 'string', 'max' => 250],        
-        ];
-    }
-	
+			[['photo'], 'string', 'max' => 250],
+		];
+	}
+
 	//---------------------------------------------------------------------------
-    public function attributeLabels()
+	public function attributeLabels()
 	//---------------------------------------------------------------------------
-    {
-        return [
-            'uid' => 'GUID в 1С',
-            'photo' =>'Фотография сотрудника',                   
-        ];
-    }
-	
+	{
+		return [
+			'uid' => 'GUID в 1С',
+			'photo' => 'Фотография сотрудника',
+		];
+	}
+
 	//---------------------------------------------------------------------------
-    public static function findStaff($uid)
+	public static function findStaff($uid)
 	//---------------------------------------------------------------------------
-    {
-        return static::findOne($uid);
-    }
-	
+	{
+		return static::findOne($uid);
+	}
+
+	public function getStaffInfo()
+	{
+		return $this->hasMany(StaffInfo::class, ['employee_id' => 'employee_id']);
+	}
+
 	//---------------------------------------------------------------------------
 	public function beforeSave($insert)
 	//---------------------------------------------------------------------------
 	{
-		if(parent::beforeSave($insert))
-		{ 
+		if (parent::beforeSave($insert)) {
 			//
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
-	
-	
 }
