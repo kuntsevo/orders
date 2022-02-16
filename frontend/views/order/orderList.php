@@ -7,23 +7,15 @@
 
 use yii\helpers\Html;
 
-// $this->title = $name;
-
 $customer_data = $customer->dataAttributes();
 ?>
 
 <div class="site-success">
     <div class="container">
 
-        <?
-        if ($customer_data->first_name) :
-            $client_name = Html::encode($customer_data->first_name);
-        else :
-            $client_name =  "уважаемый клиент";
-        endif;
-        ?>
+        <? $client_name = $customer_data->first_name ? $customer_data->first_name : "уважаемый клиент"; ?>
 
-        <h2> <?= "Добрый день, " . $client_name . "!" ?></h2>
+        <h2> <?= "Добрый день, {$client_name}!" ?></h2>
 
         <? if (!$orders) :
             echo Html::encode('Нет документов в работе');
@@ -39,13 +31,7 @@ $customer_data = $customer->dataAttributes();
 
                 <div class="border border-primary rounded p-2 mb-3">
                     <h5><?= Html::encode($order->dealer->name) ?></h5>
-                    <div class="d-flex flex-row bd-highlight mb-3 align-items-center">
-                        <?= Html::encode($vehicle_data->model) ?>
-
-                        <div class="p-2 bd-highlight">
-                            <span class="border border-primary rounded p-1"><?= Html::encode($vehicle->registration_number) ?></span>
-                        </div>
-                    </div>
+                    <?= $this->render('_vehicleInfo.php', compact('vehicle', 'vehicle_data')) ?>
 
                     <hr>
                     <div class="row justify-content-md-left">
