@@ -109,9 +109,8 @@ class OrderController extends Controller
 			$this->redirect($this->baseUrlRedirect);
 
 		$order = Orders::findOrderByUid($order_id);
-		$orderWithStaff = Orders::orderWithStaffInfo($order_id);
 
-		return $this->render('orderItem', compact('order', 'orderWithStaff'));
+		return $this->render('orderItem', compact('order'));
 	}
 
 	//---------------------------------------------------------------------------

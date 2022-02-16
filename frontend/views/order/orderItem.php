@@ -17,7 +17,8 @@ use yii\helpers\Html;
         $vehicle = $order->vehicle;
         $vehicle_data = $vehicle->dataAttributes();
 
-        $staff_data = $orderWithStaff->staff_data;
+        $staff_data = $order->staff->dataAttributes();
+        $staffInfo = $order->staffInfo;
 
         ?>
 
@@ -56,7 +57,7 @@ use yii\helpers\Html;
                             <?= Html::encode($staff_data->name) ?>
                         </div>
                         <div class="col-md-auto">
-                            <?= Html::encode($orderWithStaff->work_phone) ?>
+                            <?= Html::encode($staffInfo->work_phone) ?>
                         </div>
                     </div>
                 </div>

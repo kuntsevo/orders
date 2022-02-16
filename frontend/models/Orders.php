@@ -74,29 +74,13 @@ class Orders extends ActiveRecord
 
 	public function getStaffInfo()
 	{
-		$rows = (new Query())
-			->select([
-				"orders.*",
-				"orders.data orders_data",
-				"staff.*",
-				"staff.data staff_data",
-				"staffInfo.*"
-			])
-			->from(['orders' => Orders::tableName()])
-			->where(["orders.uid" => $this->uid])
-			->leftJoin(
-				['staff' => Staff::tableName()],
-				"orders.manager_id = staff.uid"
-			)
-			->leftJoin(
-				['staffInfo' => StaffInfo::tableName()],
-				"orders.base_id = staffInfo.base_id and staff.employee_id = staffInfo.employee_id"
-			)
-			->one();
-
-		$result = (object)$rows;
-		$result->manager = json_decode($result->staff_data)->attributes;
-		return $result;
+		// TODO
+		// обработать ситуацию, когда нет StaffInfo
+		return $this->hasOne(
+			StaffInfo::class,
+			['base_id' => 'base_id']
+		)
+			->where(['employee_id' => $this->staff->employee_id]);
 	}
 
 	public static function getOrdersByCustomer($id)
@@ -113,32 +97,6 @@ class Orders extends ActiveRecord
 	//---------------------------------------------------------------------------
 	{
 		return static::findOne($uid);
-	}
-
-	public static function orderWithStaffInfo($uid)
-	{
-		$result = (new Query())
-			->select([
-				"staff.*",
-				"staff.data staff_data",
-				"staffInfo.*"
-			])
-			->from(['orders' => Orders::tableName()])
-			->where(["orders.uid" => $uid])
-			->leftJoin(
-				['staff' => Staff::tableName()],
-				"orders.manager_id = staff.uid"
-			)
-			->leftJoin(
-				['staffInfo' => StaffInfo::tableName()],
-				"orders.base_id = staffInfo.base_id and staff.employee_id = staffInfo.employee_id"
-			)
-			->one();
-
-		$result = (object)$result;
-		$result->staff_data = json_decode($result->staff_data)->attributes;
-				
-		return $result;
 	}
 
 	//---------------------------------------------------------------------------
