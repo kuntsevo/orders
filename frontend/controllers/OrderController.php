@@ -32,11 +32,11 @@ class OrderController extends Controller
 	{
 		return [
 			'access' => [
-				'class' => AccessControl::className(),
+				'class' => AccessControl::class,
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'index'],
+						'actions' => ['test', 'index', 'show-order'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -52,6 +52,7 @@ class OrderController extends Controller
 		return [
 			'test' => ['GET'],
 			'index' => ['GET'],
+			'show-order' => ['GET'],
 		];
 	}
 
@@ -69,10 +70,10 @@ class OrderController extends Controller
 		//пока пусть будет общее
 		//if (is_null($this->referer))
 		//	$this->redirect($this->baseUrlRedirect);
-		
+
 		// $uid = Yii::$app->request->get('uid', '');
 		$customer_id = Yii::$app->request->get('id', '');
-		
+
 		// if (is_null($uid))
 		// 	$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
@@ -99,6 +100,18 @@ class OrderController extends Controller
 			'orders' => $customer_orders,
 			'customer' => $customer,
 		]);
+	}
+
+	public function actionShowOrder(string $order_id)
+	{
+		$order_id = Yii::$app->request->get('order_id', '');
+		if (is_null($order_id))
+			$this->redirect($this->baseUrlRedirect);
+
+		$order = Orders::findOrderByUid($order_id);
+		$orderWithStaff = Orders::orderWithStaffInfo($order_id);
+
+		return $this->render('orderItem', compact('order', 'orderWithStaff'));
 	}
 
 	//---------------------------------------------------------------------------
@@ -183,19 +196,5 @@ class OrderController extends Controller
 		// $method_log->save(false);
 
 		return $result;
-	}
-
-	private function attributesFromData(string $data)
-	{
-		$data_object = json_decode($data);
-
-		return $data_object->attributes;
-	}
-
-	private function tablesFromData(string $data)
-	{
-		$data_object = json_decode($data);
-
-		return $data_object->tables;
 	}
 }
