@@ -7,45 +7,31 @@
 
 use yii\helpers\Html;
 
-$this->title = $name;
-
-$customer_data = json_decode($customer->data)->attributes;
+$customer_data = $customer->dataAttributes();
 ?>
 
 <div class="site-success">
     <div class="container">
 
-        <?php
-        if ($customer_data->first_name) :
-            $client_name = Html::encode($customer_data->first_name);
-        else :
-            $client_name =  "уважаемый клиент";
-        endif;
-        ?>
+        <? $client_name = $customer_data->first_name ? $customer_data->first_name : "уважаемый клиент"; ?>
 
-        <h2> <?= "Добрый день, " . $client_name . "!" ?></h2>
+        <h2> <?= "Добрый день, {$client_name}!" ?></h2>
 
-        <?php if (!$orders) :
+        <? if (!$orders) :
             echo Html::encode('Нет документов в работе');
         ?>
-        <?php else : ?>
+        <? else : ?>
             <h4><?= "Активные работы:" ?></h4>
 
-            <?php foreach ($orders as $order) :
-                $order_attributes = json_decode($order->data)->attributes;
+            <? foreach ($orders as $order) :
+                $order_attributes = $order->dataAttributes();
 
                 $vehicle = $order->vehicle;
-                $vehicle_data = json_decode($vehicle->data)->attributes; ?>
+                $vehicle_data = $vehicle->dataAttributes(); ?>
 
                 <div class="border border-primary rounded p-2 mb-3">
                     <h5><?= Html::encode($order->dealer->name) ?></h5>
-                    <div class="d-flex flex-row bd-highlight mb-3 align-items-center">
-                        <?= Html::encode($vehicle_data->model) ?>
-
-                        <div class="p-2 bd-highlight">
-                            <span class="border border-primary rounded p-1"><?= Html::encode($vehicle->registration_number) ?></span>
-                        </div>
-                    </div>
+                    <?= $this->render('_vehicleInfo.php', compact('vehicle', 'vehicle_data')) ?>
 
                     <hr>
                     <div class="row justify-content-md-left">
@@ -80,12 +66,12 @@ $customer_data = json_decode($customer->data)->attributes;
                             <?= Html::encode(Yii::$app->formatter->asCurrency(($order_attributes->amount - $order_attributes->payment_amount))) ?>
                         </div>
                     </div>
-                    <div class="d-grid gap-2">
+                    <div class="d-grid gap-2 pt-3">
                         <button class="btn btn-primary" type="submit">Оплатить</button>
-                        <a class="btn btn-outline-primary" href="#" role="button">Подробнее</a>
+                        <?= Html::a('Подробнее', ['@orderItem', 'order_id' => $order->uid], ['class' => 'btn btn-outline-primary', 'role' => 'button'])  ?>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+            <? endforeach; ?>
+        <? endif; ?>
     </div>
 </div>

@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'queue'],
     'controllerNamespace' => 'frontend\controllers',
+    'defaultRoute' => 'order/index',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -39,18 +40,25 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-			'enableStrictParsing' => true, //только перечисленные ниже
+            'enableStrictParsing' => true, //только перечисленные ниже
             'rules' => [
-				'/' => 'order/index',
-                'test' => 'order/test',
+                '<action:(|show-order|test)>' => 'order/<action>',
             ],
         ],
-		'queue' => [
+        'queue' => [
             'class' => \yii\queue\file\Queue::class,
             'path' => '@console/runtime/queue',
             'as log' => \yii\queue\LogBehavior::class,
-			'attempts' => 1,
-        ],
+            'attempts' => 1,
+        ],        
+    ],
+    'aliases' => [
+        //---------------------------------------------------------------------------
+        // псевдонимы URL
+        '@orders' => '/',
+        '@orderItem' => 'order/show-order',
+        '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
+        //---------------------------------------------------------------------------
     ],
     'params' => $params,
 ];

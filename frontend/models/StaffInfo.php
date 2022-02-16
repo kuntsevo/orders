@@ -2,18 +2,22 @@
 
 namespace frontend\models;
 
-use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
 
-class Customers extends ActiveRecord
+class StaffInfo extends ActiveRecord
 {	
-	use DataExtractor;
+	//---------------------------------------------------------------------------
+	public static function tableName()
+	//---------------------------------------------------------------------------
+	{
+		return '{{StaffInfo}}';
+	}
 
 	//---------------------------------------------------------------------------
     public static function primaryKey()
 	//---------------------------------------------------------------------------
     {
-        return ['uid'];
+        return ['employee_id', 'base_id'];
     }
 
 	//---------------------------------------------------------------------------
@@ -21,8 +25,10 @@ class Customers extends ActiveRecord
 	//---------------------------------------------------------------------------
     {
         return [
-			[['uid'], 'string', 'max' => 36],
-			[['code'], 'string', 'max' => 8],        
+			[['employee_id'], 'string', 'max' => 15],
+			[['base_id'], 'string', 'max' => 150],     
+			[['position'], 'string', 'max' => 150],
+			[['work_phone'], 'string', 'max' => 4],
         ];
     }
 	
@@ -31,16 +37,11 @@ class Customers extends ActiveRecord
 	//---------------------------------------------------------------------------
     {
         return [
-            'uid' => 'GUID в 1С',
-            'code' =>'Код элемента в 1С',                   
+            'employee_id' => 'GUID в 1С',
+            'base_id' =>'GUID базы 1С сотрудника',                   
+			'position' => 'Должность',
+			'work_phone' => 'Рабочий номер телефона',
         ];
-    }
-	
-	//---------------------------------------------------------------------------
-    public static function findCustomer($uid)
-	//---------------------------------------------------------------------------
-    {
-        return static::findOne($uid);
     }
 	
 	//---------------------------------------------------------------------------

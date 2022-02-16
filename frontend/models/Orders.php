@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
 
 class Orders extends ActiveRecord
@@ -10,12 +11,7 @@ class Orders extends ActiveRecord
 	//const PTYPE_EK_MKB = 2;
 	//const PTYPE_QR_SBER = 3;
 
-	//---------------------------------------------------------------------------
-	public static function tableName()
-	//---------------------------------------------------------------------------
-	{
-		return '{{Orders}}';
-	}
+	use DataExtractor;
 
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
@@ -59,11 +55,31 @@ class Orders extends ActiveRecord
 		return $this->hasOne(Vehicles::class, ['vin' => 'vehicle_id']);
 	}
 
+	public function getStaff()
+	{
+		return $this->hasOne(Staff::class, ['uid' => 'manager_id']);
+	}
+
+	public function getStaffInfo()
+	{
+		// TODO
+		// обработать ситуацию, когда нет StaffInfo
+		return $this->hasOne(
+			StaffInfo::class,
+			['base_id' => 'base_id']
+		)
+			->where(['employee_id' => $this->staff->employee_id]);
+	}
+
 	public static function getOrdersByCustomer($id)
 	{
-		return static::find()
-			->where(['customer_id' => $id, 'is_archived' => false])
+
+		$order = static::find()
+			->with(['dealer', 'vehicle'])
+			->where(['customer_id' => $id, 'is_archived' => 0])
 			->all();
+
+		return $order;
 	}
 	//---------------------------------------------------------------------------
 	public static function findOrderByUid($uid)
