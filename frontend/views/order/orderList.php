@@ -68,7 +68,7 @@ $customer_data = $customer->dataAttributes();
                     </div>
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary" type="submit">Оплатить</button>
-                        <a class="btn btn-outline-primary" href="#" role="button">Подробнее</a>
+                        <?= Html::a('Подробнее', ['@orderItem', 'order_id' => $order->uid], ['class' => 'btn btn-outline-primary', 'role' => 'button'])  ?>
                     </div>
                 </div>
             <? endforeach; ?>

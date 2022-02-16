@@ -42,9 +42,7 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => true, //только перечисленные ниже
             'rules' => [
-                // '/' => 'order/index',
                 '<action:(|show-order|test)>' => 'order/<action>',
-                // 'test' => 'order/test',
             ],
         ],
         'queue' => [
@@ -52,7 +50,14 @@ return [
             'path' => '@console/runtime/queue',
             'as log' => \yii\queue\LogBehavior::class,
             'attempts' => 1,
-        ],
+        ],        
+    ],
+    'aliases' => [
+        //---------------------------------------------------------------------------
+        // псевдонимы маршрутов
+        '@orders' => '/',
+        '@orderItem' => 'order/show-order',
+        //---------------------------------------------------------------------------
     ],
     'params' => $params,
 ];

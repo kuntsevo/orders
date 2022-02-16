@@ -78,7 +78,6 @@ class OrderController extends Controller
 		// 	$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
 
-		// $order = Orders::findOrderByUid($uid);
 		$customer_orders = Orders::getOrdersByCustomer($customer_id);
 		$customer = Customers::findCustomer($customer_id);
 		//если не найден
@@ -91,8 +90,6 @@ class OrderController extends Controller
 		// 'id' => $request_data['id'],
 		// 'hs' => $base['hs']
 		// ]));
-
-		//var_dump($uid);
 
 		$this->view->title = 'История обслуживания';
 
