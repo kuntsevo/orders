@@ -13,12 +13,12 @@ use yii\helpers\Html;
     <div class="container">
         <?php
         $order_attributes = $order->dataAttributes();
-var_dump($order);
-        // $vehicle = $order->vehicle;
-        // $vehicle_data = $vehicle->dataAttributes();
 
-        // $staff_data = $order->staff->dataAttributes();
-        // $staffInfo = $order->staffInfo;
+        $vehicle = $order->vehicle;
+        $vehicle_data = $vehicle->dataAttributes();
+
+        $staff_data = $order->staff->dataAttributes();
+        $staffInfo = $order->staffInfo;
 
         ?>
 
