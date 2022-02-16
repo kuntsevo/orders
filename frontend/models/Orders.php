@@ -119,7 +119,6 @@ class Orders extends ActiveRecord
 	{
 		$result = (new Query())
 			->select([
-				"orders.*",
 				"staff.*",
 				"staff.data staff_data",
 				"staffInfo.*"
