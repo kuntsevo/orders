@@ -7,10 +7,6 @@ use \yii\db\ActiveRecord;
 
 class Orders extends ActiveRecord
 {
-	//const PTYPE_EKV_SBER = 1;
-	//const PTYPE_EK_MKB = 2;
-	//const PTYPE_QR_SBER = 3;
-
 	use DataExtractor;
 
 	//---------------------------------------------------------------------------

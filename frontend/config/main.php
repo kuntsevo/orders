@@ -42,6 +42,7 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => true, //только перечисленные ниже
             'rules' => [
+                'show-order/<order_id:\w+>' => 'order/<action>',
                 '<action:(|show-order|test)>' => 'order/<action>',
             ],
         ],

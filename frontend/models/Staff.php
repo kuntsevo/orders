@@ -27,17 +27,6 @@ class Staff extends ActiveRecord
 		];
 	}
 
-	public function __get($name)
-	{
-		switch ($name) {
-			case 'photo':
-				return empty($this->photo) ? Url::to('@staffPhotoBlanc') : $this->photo;
-				break;
-			default:
-				return parent::__get($name);
-				break;
-		}
-	}
 	//---------------------------------------------------------------------------
 	public function attributeLabels()
 	//---------------------------------------------------------------------------
@@ -69,5 +58,10 @@ class Staff extends ActiveRecord
 			return true;
 		} else
 			return false;
+	}
+
+	public function afterFind()
+	{
+		$this->photo = empty($this->photo) ? Url::to('@staffPhotoBlanc') : $this->photo;
 	}
 }

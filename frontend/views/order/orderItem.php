@@ -12,19 +12,18 @@ use yii\helpers\Html;
 <div class="site-success">
     <div class="container">
         <?php
-        $order_attributes = $order->dataAttributes();
 
         $vehicle = $order->vehicle;
-        $vehicle_data = $vehicle->dataAttributes();
 
-        $staff_data = $order->staff->dataAttributes();
+        $staff = $order->staff;
+
         $staffInfo = $order->staffInfo;
 
         ?>
 
         <div>
             <h5><?= Html::encode($order->dealer->name) ?></h5>
-            <?= $this->render('_vehicleInfo.php', compact('vehicle', 'vehicle_data')) ?>
+            <?= $this->render('_vehicleInfo', compact('vehicle')) ?>
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
@@ -40,7 +39,7 @@ use yii\helpers\Html;
                     Вид ремонта:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode($order_attributes->repair_kind) ?>
+                    <?= Html::encode($order->repair_kind) ?>
                 </div>
             </div>
 
@@ -53,11 +52,11 @@ use yii\helpers\Html;
             <div class="card my-2 py-1 border border-primary rounded" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <?= Html::img($order->staff->photo, ['alt' => Html::encode($staff_data->name), 'class' => 'img-fluid rounded-start']) ?>
+                        <?= Html::img($staff->photo, ['alt' => Html::encode($staff->name), 'class' => 'img-fluid rounded-start']) ?>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title"><?= Html::encode($staff_data->name) ?></h5>
+                            <h5 class="card-title"><?= Html::encode($staff->name) ?></h5>
                             <?= Html::encode($staffInfo->work_phone) ?>
                         </div>
                     </div>
@@ -78,7 +77,7 @@ use yii\helpers\Html;
                     Статус:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode($order_attributes->status) ?>
+                    <?= Html::encode($order->status) ?>
                 </div>
             </div>
 
@@ -87,7 +86,7 @@ use yii\helpers\Html;
                     Дата выдачи:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asDate($order_attributes->issuance_date)) ?>
+                    <?= Html::encode(Yii::$app->formatter->asDate($order->issuance_date)) ?>
                 </div>
             </div>
 
@@ -96,7 +95,7 @@ use yii\helpers\Html;
                     Сумма по работам:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order_attributes->works_cost))) ?>
+                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order->works_cost))) ?>
                 </div>
             </div>
 
@@ -105,7 +104,7 @@ use yii\helpers\Html;
                     Сумма по товарам:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order_attributes->goods_cost))) ?>
+                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order->goods_cost))) ?>
                 </div>
             </div>
 
@@ -114,7 +113,7 @@ use yii\helpers\Html;
                     Сумма без скидки:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order_attributes->net_price))) ?>
+                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order->net_price))) ?>
                 </div>
             </div>
 
@@ -123,7 +122,7 @@ use yii\helpers\Html;
                     Сумма скидки:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order_attributes->discount))) ?>
+                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order->discount))) ?>
                 </div>
             </div>
 
@@ -134,7 +133,7 @@ use yii\helpers\Html;
                     Сумма к оплате:
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order_attributes->amount - $order_attributes->payment_amount))) ?>
+                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order->amount - $order->payment_amount))) ?>
                 </div>
             </div>
 
