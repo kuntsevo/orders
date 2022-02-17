@@ -41,8 +41,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'enableStrictParsing' => true, //только перечисленные ниже
-            'rules' => [
-                'show-order/<order_id:\w+>' => 'order/<action>',
+            'rules' => [                
                 '<action:(|show-order|test)>' => 'order/<action>',
             ],
         ],
