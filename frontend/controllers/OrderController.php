@@ -36,7 +36,7 @@ class OrderController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'index', 'show-order'],
+						'actions' => ['test', 'index', 'show-order', 'show-table'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -53,6 +53,7 @@ class OrderController extends Controller
 			'test' => ['GET'],
 			'index' => ['GET'],
 			'show-order' => ['GET'],
+			'show-table' => ['GET'],
 		];
 	}
 
@@ -72,13 +73,13 @@ class OrderController extends Controller
 		//	$this->redirect($this->baseUrlRedirect);
 
 		// $uid = Yii::$app->request->get('uid', '');
-		$customer_id = Yii::$app->request->get('id', '');
+		$customer_id = Yii::$app->request->get('id');
 
-		// if (is_null($uid))
-		// 	$this->redirect($this->baseUrlRedirect);
+		if (is_null($customer_id))
+			$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
 
-		$customer_orders = Orders::getOrdersByCustomer($customer_id);
+		$customer_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$customer = Customers::findCustomer($customer_id);
 		//если не найден
 		//if (is_null($order))
@@ -99,9 +100,9 @@ class OrderController extends Controller
 		]);
 	}
 
-	public function actionShowOrder(string $order_id)
+	public function actionShowOrder()
 	{
-		$order_id = Yii::$app->request->get('order_id', '');
+		$order_id = Yii::$app->request->get('order_id');
 		if (is_null($order_id))
 			$this->redirect($this->baseUrlRedirect);
 
@@ -110,6 +111,19 @@ class OrderController extends Controller
 		return $this->render('orderItem', compact('order'));
 	}
 
+	public function actionShowTable()
+	{
+		$order_id = Yii::$app->request->get('order_id');
+		$table_name = Yii::$app->request->get('table_name');
+
+		if (is_null($order_id) || is_null($table_name))
+			$this->redirect($this->baseUrlRedirect);
+
+		$order = Orders::findOrderByUid($order_id);
+		$tableAttributes = $order->tableAttributesSequence($table_name);
+
+		return $this->render('orderTable', compact(['order', 'table_name', 'tableAttributes']));
+	}
 	//---------------------------------------------------------------------------
 	protected function setIP($ip)
 	//---------------------------------------------------------------------------

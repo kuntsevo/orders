@@ -11,37 +11,36 @@ use yii\helpers\Html;
 
 <div class="site-success">
     <div class="container">
-
         <? $client_name = $customer->first_name ? $customer->first_name : "уважаемый клиент"; ?>
 
         <h2> <?= "Добрый день, {$client_name}!" ?></h2>
 
-        <? if (!$orders) :
-            echo Html::encode('Нет документов в работе');
-        ?>
+        <? if (!$orders) : ?>
+            <?= Html::tag('p', Html::encode('Нет документов в работе')); ?>
         <? else : ?>
-            <h4><?= "Активные работы:" ?></h4>
+            <?= Html::tag('h4', Html::encode('Активные работы:')) ?>
 
             <? foreach ($orders as $order) :
                 $vehicle = $order->vehicle; ?>
 
                 <div class="border border-primary rounded p-2 mb-3">
-                    <h5><?= Html::encode($order->dealer->name) ?></h5>
+                    <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
                     <?= $this->render('_vehicleInfo', compact('vehicle')) ?>
 
                     <hr>
                     <div class="row justify-content-md-left">
-                        <div class="col-md-auto">
-                            <?= Html::encode($order->attributeLabels()['number']) ?>
-
-                        </div>
+                        <?= Html::tag(
+                            'div',
+                            Html::tag('span', Html::activeLabel($order, 'number')),
+                            ['class' => 'col-md-auto']
+                        ) ?>
                         <div class="col-md-auto">
                             <?= Html::encode($order->number) ?>
                         </div>
                     </div>
                     <div class="row justify-content-md-left">
                         <div class="col-md-auto">
-                            Статус:
+                            <?= Html::tag('span', Html::activeLabel($order, 'status')) ?>
                         </div>
                         <div class="col-md-auto">
                             <?= Html::encode($order->status) ?>
@@ -49,7 +48,7 @@ use yii\helpers\Html;
                     </div>
                     <div class="row justify-content-md-left">
                         <div class="col-md-auto">
-                            Дата выдачи:
+                            <?= Html::tag('span', Html::activeLabel($order, 'issuance_date')) ?>
                         </div>
                         <div class="col-md-auto">
                             <?= Html::encode(Yii::$app->formatter->asDate($order->issuance_date)) ?>
@@ -57,19 +56,19 @@ use yii\helpers\Html;
                     </div>
                     <div class="row justify-content-md-left">
                         <div class="col-md-auto">
-                            Сумма к оплате:
+                            <?= Html::tag('span', Html::activeLabel($order, 'amount_payable')) ?>
                         </div>
                         <div class="col-md-auto">
-                            <?= Html::encode(Yii::$app->formatter->asCurrency(($order->amount - $order->payment_amount))) ?>
+                            <?= Html::encode(Yii::$app->formatter->asCurrency($order->amountPayable)) ?>
                         </div>
                     </div>
                     <div class="d-grid gap-2 pt-3">
-                        <button class="btn btn-primary" type="submit">Оплатить</button>
+                        <?= Html::button('Оплатить', ['class' => 'btn btn-primary', 'type' => 'submit']) ?>
                         <?= Html::a(
                             'Подробнее',
                             ['@orderItem', 'order_id' => $order->uid],
                             ['class' => 'btn btn-outline-primary', 'role' => 'button']
-                        )  ?>
+                        ) ?>
                     </div>
                 </div>
             <? endforeach; ?>

@@ -3,7 +3,9 @@
 namespace frontend\models;
 
 use frontend\traits\DataExtractor;
+use phpDocumentor\Reflection\Types\Null_;
 use \yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class Orders extends ActiveRecord
 {
@@ -30,10 +32,13 @@ class Orders extends ActiveRecord
 	public function attributeLabels()
 	//---------------------------------------------------------------------------
 	{
-		return [
+		// общие псевдонимы свойств; могут переопределяться в зависимости от типа документа
+		$commonLabels = [
 			'uid' => 'GUID в 1C',
 			'number' => 'Номер',
 		];
+
+		return array_merge($commonLabels, $this->attributeLabelsByDocumentType());
 	}
 
 	public function getCustomer()
@@ -67,18 +72,46 @@ class Orders extends ActiveRecord
 			->where(['employee_id' => $this->staff->employee_id]);
 	}
 
-	public static function getOrdersByCustomer($id)
+	public function getAmountPayable()
 	{
+		return $this->amount - $this->payment_amount;
+	}
 
-		$order = static::find()
+	public static function getAllOrdersByCustomer(string $customer_id)
+	{
+		return static::getOrdersByCustomer($customer_id);
+	}
+
+	public static function getActiveOrdersByCustomer(string $customer_id)
+	{
+		return static::getOrdersByCustomer($customer_id, 0);
+	}
+
+	public static function getArchivedOrdersByCustomer(string $customer_id)
+	{
+		return static::getOrdersByCustomer($customer_id, 1);
+	}
+
+	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null): array
+	{
+		$condition = ['customer_id' => $customer_id];
+
+		if (!is_null($is_archived)) {
+			$condition = array_merge($condition, [
+				'is_archived' => $is_archived,
+			]);
+		}
+
+		$orders = static::find()
 			->with(['dealer', 'vehicle'])
-			->where(['customer_id' => $id, 'is_archived' => 0])
+			->where($condition)
 			->all();
 
-		return $order;
+		return $orders;
 	}
+
 	//---------------------------------------------------------------------------
-	public static function findOrderByUid($uid)
+	public static function findOrderByUid($uid): Orders
 	//---------------------------------------------------------------------------
 	{
 		return static::findOne($uid);
@@ -93,5 +126,77 @@ class Orders extends ActiveRecord
 			return true;
 		} else
 			return false;
+	}
+
+	/**
+	 * Возвращает псевдонимы свойств заказа в зависимости от типа документа.
+	 * "Затирает" псевдонимы, указанные как "общие" в attributeLabels()
+	 */
+	private function attributeLabelsByDocumentType(): array
+	{
+		switch ($this->document_type) {
+			case 'ЗаказНаряд':
+				return $this->workOrderAttributeLabels();
+				break;
+			default:
+				return [];
+				break;
+		}
+	}
+
+	/**
+	 * Для каждого типа документа прописать свои псевдонимы свойств
+	 * Здесь - для заказ-нарядов
+	 */
+	private function workOrderAttributeLabels()
+	{
+		return [
+			'number' => '№ заказ-наряда',
+			'status' => 'Статус',
+			'repair_kind' => 'Вид ремонта',
+			'issuance_date' => 'Дата выдачи',
+			'works_cost' => 'Сумма по работам',
+			'goods_cost' => 'Сумма по товарам',
+			'net_price' => 'Сумма без скидки',
+			'discount' => 'Сумма скидки',
+			'amount' => 'Сумма заказ-наряда',
+			'payment_amount' => 'Оплаченная сумма',
+			'registration_number' => 'Гос. номер автомобиля',
+			'amount_payable' => 'Сумма к оплате',
+			'works' => 'Работы',
+			'goods' => 'Товары',
+		];
+	}
+
+	public function tableAttributesSequence(string $table_name): array
+	{
+		switch ($this->document_type) {
+			case 'ЗаказНаряд':
+				return $this->workOrderTableAttributesSequence($table_name);
+				break;
+			default:
+				return [];
+				break;
+		}
+	}
+
+	private function workOrderTableAttributesSequence(string $table_name): array
+	{
+		$attributesSequence = [
+			'works' => [
+				'work_name' => 'Наименование',
+				'work_count' => 'Количество',
+				'work_net_price' => 'Сумма без скидки',
+				'work_amount' => 'Сумма',
+			],
+			'goods' => [
+				'good_name' => 'Наименование',
+				'good_count' => 'Количество',
+				'good_net_price' => 'Сумма без скидки',
+				'good_amount' => 'Сумма',
+			],
+		];
+
+		return ArrayHelper::getValue($attributesSequence, $table_name, []);
 	}
 }

@@ -33,7 +33,8 @@ class Staff extends ActiveRecord
 	{
 		return [
 			'uid' => 'GUID в 1С',
-			'photo' => 'Фотография сотрудника',
+			'name' => 'ФИО',
+			'photo' => 'Фотография',
 		];
 	}
 
