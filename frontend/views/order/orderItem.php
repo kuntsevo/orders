@@ -21,11 +21,7 @@ use yii\helpers\Url;
         ?>
 
         <div>
-            <?= Html::a(
-                '&larr;',
-                Yii::$app->request->referrer,
-                ['class' => 'btn btn-primary btn-sm rounded-pill px-4', 'role' => 'button']
-            )  ?>
+            <?= $this->render('_backButton') ?>
 
             <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
 
@@ -130,6 +126,22 @@ use yii\helpers\Url;
                 <div class="col-md-auto">
                     <?= Html::encode(Yii::$app->formatter->asCurrency(($order->discount))) ?>
                 </div>
+            </div>
+
+            <div class="row justify-content-md-left">
+                <?= Html::a(
+                    'Работы &rarr;',
+                    ['@orderTable', 'order_id' => $order->uid, 'table_name' => 'works'],
+                    ['class' => 'btn btn-link', 'role' => 'button']
+                ) ?>
+            </div>
+
+            <div class="row justify-content-md-left">
+                <?= Html::a(
+                    'Запчасти &rarr;',
+                    ['@orderTable', 'order_id' => $order->uid, 'table_name' => 'goods'],
+                    ['class' => 'btn btn-link', 'role' => 'button']
+                ) ?>
             </div>
 
             <hr>

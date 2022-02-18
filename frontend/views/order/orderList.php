@@ -68,7 +68,7 @@ use yii\helpers\Html;
                             'Подробнее',
                             ['@orderItem', 'order_id' => $order->uid],
                             ['class' => 'btn btn-outline-primary', 'role' => 'button']
-                        )  ?>
+                        ) ?>
                     </div>
                 </div>
             <? endforeach; ?>

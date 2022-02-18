@@ -42,7 +42,7 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => true, //только перечисленные ниже
             'rules' => [                
-                '<action:(|show-order|test)>' => 'order/<action>',
+                '<action:(|show-order|show-table|test)>' => 'order/<action>',
             ],
         ],
         'queue' => [
@@ -57,6 +57,7 @@ return [
         // псевдонимы URL
         '@orders' => '/',
         '@orderItem' => 'order/show-order',
+        '@orderTable' => 'order/show-table',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
     ],

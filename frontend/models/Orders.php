@@ -5,6 +5,7 @@ namespace frontend\models;
 use frontend\traits\DataExtractor;
 use phpDocumentor\Reflection\Types\Null_;
 use \yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class Orders extends ActiveRecord
 {
@@ -91,7 +92,7 @@ class Orders extends ActiveRecord
 		return static::getOrdersByCustomer($customer_id, 1);
 	}
 
-	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null)
+	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null): array
 	{
 		$condition = ['customer_id' => $customer_id];
 
@@ -101,16 +102,16 @@ class Orders extends ActiveRecord
 			]);
 		}
 
-		$order = static::find()
+		$orders = static::find()
 			->with(['dealer', 'vehicle'])
 			->where($condition)
 			->all();
 
-		return $order;
+		return $orders;
 	}
 
 	//---------------------------------------------------------------------------
-	public static function findOrderByUid($uid)
+	public static function findOrderByUid($uid): Orders
 	//---------------------------------------------------------------------------
 	{
 		return static::findOne($uid);
@@ -131,7 +132,7 @@ class Orders extends ActiveRecord
 	 * Возвращает псевдонимы свойств заказа в зависимости от типа документа.
 	 * "Затирает" псевдонимы, указанные как "общие" в attributeLabels()
 	 */
-	private function attributeLabelsByDocumentType()
+	private function attributeLabelsByDocumentType(): array
 	{
 		switch ($this->document_type) {
 			case 'ЗаказНаряд':
@@ -162,6 +163,40 @@ class Orders extends ActiveRecord
 			'payment_amount' => 'Оплаченная сумма',
 			'registration_number' => 'Гос. номер автомобиля',
 			'amount_payable' => 'Сумма к оплате',
+			'works' => 'Работы',
+			'goods' => 'Товары',
 		];
+	}
+
+	public function tableAttributesSequence(string $table_name): array
+	{
+		switch ($this->document_type) {
+			case 'ЗаказНаряд':
+				return $this->workOrderTableAttributesSequence($table_name);
+				break;
+			default:
+				return [];
+				break;
+		}
+	}
+
+	private function workOrderTableAttributesSequence(string $table_name): array
+	{
+		$attributesSequence = [
+			'works' => [
+				'work_name' => 'Наименование',
+				'work_count' => 'Количество',
+				'work_net_price' => 'Сумма без скидки',
+				'work_amount' => 'Сумма',
+			],
+			'goods' => [
+				'good_name' => 'Наименование',
+				'good_count' => 'Количество',
+				'good_net_price' => 'Сумма без скидки',
+				'good_amount' => 'Сумма',
+			],
+		];
+
+		return ArrayHelper::getValue($attributesSequence, $table_name, []);
 	}
 }

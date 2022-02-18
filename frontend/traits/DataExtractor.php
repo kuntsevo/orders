@@ -2,8 +2,8 @@
 
 namespace frontend\traits;
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
-use yii\helpers\Url;
 
 trait DataExtractor
 {
@@ -21,6 +21,10 @@ trait DataExtractor
 
         if (!empty($this->attr) && array_key_exists($name, $this->attr)) {
             return $this->attr[$name];
+        }
+
+        if (!empty($this->tables) && array_key_exists($name, $this->tables)) {
+            return $this->tables[$name];
         }
 
         return parent::__get($name);
