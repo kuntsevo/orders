@@ -36,14 +36,4 @@ trait DataExtractor
         $this->attr = $this->dataObject['attributes'];
         $this->tables = $this->dataObject['tables'];
     }
-
-    public function dataAttributes()
-    {
-        return Json::decode($this->data)->attributes;
-    }
-
-    public function dataTables()
-    {
-        return Json::decode($this->data)->tables;
-    }
 }
