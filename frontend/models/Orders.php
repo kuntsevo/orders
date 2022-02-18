@@ -30,6 +30,7 @@ class Orders extends ActiveRecord
 	public function attributeLabels()
 	//---------------------------------------------------------------------------
 	{
+		// общие псевдонимы свойств; могут переопределяться в зависимости от типа документа
 		$commonLabels = [
 			'uid' => 'GUID в 1C',
 			'number' => 'Номер',
@@ -84,6 +85,7 @@ class Orders extends ActiveRecord
 
 		return $order;
 	}
+
 	//---------------------------------------------------------------------------
 	public static function findOrderByUid($uid)
 	//---------------------------------------------------------------------------
@@ -102,6 +104,10 @@ class Orders extends ActiveRecord
 			return false;
 	}
 
+	/**
+	 * Возвращает псевдонимы свойств заказа в зависимости от типа документа.
+	 * "Затирает" псевдонимы, указанные как "общие" в attributeLabels()
+	 */
 	private function attributeLabelsByDocumentType()
 	{
 		switch ($this->document_type) {
@@ -114,6 +120,10 @@ class Orders extends ActiveRecord
 		}
 	}
 
+	/**
+	 * Для каждого типа документа прописать свои псевдонимы свойств
+	 * Здесь - для заказ-нарядов
+	 */
 	private function workOrderAttributeLabels()
 	{
 		return [

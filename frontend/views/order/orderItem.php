@@ -15,9 +15,7 @@ use yii\helpers\Url;
         <?php
 
         $vehicle = $order->vehicle;
-
         $staff = $order->staff;
-
         $staffInfo = $order->staffInfo;
 
         ?>
