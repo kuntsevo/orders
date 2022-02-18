@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use frontend\traits\DataExtractor;
+use phpDocumentor\Reflection\Types\Null_;
 use \yii\db\ActiveRecord;
 
 class Orders extends ActiveRecord
@@ -75,12 +76,34 @@ class Orders extends ActiveRecord
 		return $this->amount - $this->payment_amount;
 	}
 
-	public static function getOrdersByCustomer($id)
+	public static function getAllOrdersByCustomer(string $customer_id)
 	{
+		return static::getOrdersByCustomer($customer_id);
+	}
+
+	public static function getActiveOrdersByCustomer(string $customer_id)
+	{
+		return static::getOrdersByCustomer($customer_id, 0);
+	}
+
+	public static function getArchivedOrdersByCustomer(string $customer_id)
+	{
+		return static::getOrdersByCustomer($customer_id, 1);
+	}
+
+	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null)
+	{
+		$condition = ['customer_id' => $customer_id];
+
+		if (!is_null($is_archived)) {
+			$condition = array_merge($condition, [
+				'is_archived' => $is_archived,
+			]);
+		}
 
 		$order = static::find()
 			->with(['dealer', 'vehicle'])
-			->where(['customer_id' => $id, 'is_archived' => 0])
+			->where($condition)
 			->all();
 
 		return $order;

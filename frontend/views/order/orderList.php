@@ -15,9 +15,8 @@ use yii\helpers\Html;
 
         <h2> <?= "Добрый день, {$client_name}!" ?></h2>
 
-        <? if (!$orders) :
-            Html::tag('p', Html::encode('Нет документов в работе'));
-        ?>
+        <? if (!$orders) : ?>
+            <?= Html::tag('p', Html::encode('Нет документов в работе')); ?>
         <? else : ?>
             <?= Html::tag('h4', Html::encode('Активные работы:')) ?>
 
