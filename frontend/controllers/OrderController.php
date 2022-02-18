@@ -78,7 +78,7 @@ class OrderController extends Controller
 		// 	$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
 
-		$customer_orders = Orders::getArchivedOrdersByCustomer($customer_id);
+		$customer_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$customer = Customers::findCustomer($customer_id);
 		//если не найден
 		//if (is_null($order))
