@@ -33,6 +33,8 @@ class Vehicles extends ActiveRecord
 		return [
 			'vin' => 'ВИН',
 			'registration_number' => 'Государственный регистрационный номер',
+			'model' => 'Модель',
+			'brand' => 'Марка',
 		];
 	}
 

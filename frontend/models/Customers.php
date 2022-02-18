@@ -6,55 +6,54 @@ use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
 
 class Customers extends ActiveRecord
-{	
+{
 	use DataExtractor;
 
 	//---------------------------------------------------------------------------
-    public static function primaryKey()
+	public static function primaryKey()
 	//---------------------------------------------------------------------------
-    {
-        return ['uid'];
-    }
+	{
+		return ['uid'];
+	}
 
 	//---------------------------------------------------------------------------
-    public function rules()
+	public function rules()
 	//---------------------------------------------------------------------------
-    {
-        return [
+	{
+		return [
 			[['uid'], 'string', 'max' => 36],
-			[['code'], 'string', 'max' => 8],        
-        ];
-    }
-	
+			[['code'], 'string', 'max' => 8],
+		];
+	}
+
 	//---------------------------------------------------------------------------
-    public function attributeLabels()
+	public function attributeLabels()
 	//---------------------------------------------------------------------------
-    {
-        return [
-            'uid' => 'GUID в 1С',
-            'code' =>'Код элемента в 1С',                   
-        ];
-    }
-	
+	{
+		return [
+			'uid' => 'GUID в 1С',
+			'code' => 'Код элемента в 1С',
+			'first_name' => 'Имя',
+			'last_name' => 'Фамилия',
+			'patronymic' => 'Отчество',
+		];
+	}
+
 	//---------------------------------------------------------------------------
-    public static function findCustomer($uid)
+	public static function findCustomer($uid)
 	//---------------------------------------------------------------------------
-    {
-        return static::findOne($uid);
-    }
-	
+	{
+		return static::findOne($uid);
+	}
+
 	//---------------------------------------------------------------------------
 	public function beforeSave($insert)
 	//---------------------------------------------------------------------------
 	{
-		if(parent::beforeSave($insert))
-		{ 
+		if (parent::beforeSave($insert)) {
 			//
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
-	
-	
 }

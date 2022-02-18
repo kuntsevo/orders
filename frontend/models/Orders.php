@@ -30,10 +30,12 @@ class Orders extends ActiveRecord
 	public function attributeLabels()
 	//---------------------------------------------------------------------------
 	{
-		return [
+		$commonLabels = [
 			'uid' => 'GUID в 1C',
 			'number' => 'Номер',
 		];
+
+		return array_merge($commonLabels, $this->attributeLabelsByDocumentType());
 	}
 
 	public function getCustomer()
@@ -67,6 +69,11 @@ class Orders extends ActiveRecord
 			->where(['employee_id' => $this->staff->employee_id]);
 	}
 
+	public function getAmountPayable()
+	{
+		return $this->amount - $this->payment_amount;
+	}
+
 	public static function getOrdersByCustomer($id)
 	{
 
@@ -93,5 +100,35 @@ class Orders extends ActiveRecord
 			return true;
 		} else
 			return false;
+	}
+
+	private function attributeLabelsByDocumentType()
+	{
+		switch ($this->document_type) {
+			case 'ЗаказНаряд':
+				return $this->workOrderAttributeLabels();
+				break;
+			default:
+				return [];
+				break;
+		}
+	}
+
+	private function workOrderAttributeLabels()
+	{
+		return [
+			'number' => '№ заказ-наряда',
+			'status' => 'Статус',
+			'repair_kind' => 'Вид ремонта',
+			'issuance_date' => 'Дата выдачи',
+			'works_cost' => 'Сумма по работам',
+			'goods_cost' => 'Сумма по товарам',
+			'net_price' => 'Сумма без скидки',
+			'discount' => 'Сумма скидки',
+			'amount' => 'Сумма заказ-наряда',
+			'payment_amount' => 'Оплаченная сумма',
+			'registration_number' => 'Гос. номер автомобиля',
+			'amount_payable' => 'Сумма к оплате',
+		];
 	}
 }

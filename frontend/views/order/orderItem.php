@@ -6,6 +6,7 @@
 /* @var $exception Exception */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
 
@@ -22,12 +23,19 @@ use yii\helpers\Html;
         ?>
 
         <div>
-            <h5><?= Html::encode($order->dealer->name) ?></h5>
+            <?= Html::a(
+                '&larr;',
+                Yii::$app->request->referrer,
+                ['class' => 'btn btn-primary btn-sm rounded-pill px-4', 'role' => 'button']
+            )  ?>
+
+            <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
+
             <?= $this->render('_vehicleInfo', compact('vehicle')) ?>
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    VIN:
+                    <?= Html::tag('span', Html::activeLabel($vehicle, 'vin')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode($vehicle->vin) ?>
@@ -36,7 +44,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Вид ремонта:
+                    <?= Html::tag('span', Html::activeLabel($order, 'repair_kind')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode($order->repair_kind) ?>
@@ -45,7 +53,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                <p class="fw-bold">Мастер-консультант:</p>                
+                    <?= Html::tag('span', Html::label('Мастер-консультант')) ?>
                 </div>
             </div>
 
@@ -65,7 +73,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    № заказ-наряда:
+                    <?= Html::tag('span', Html::activeLabel($order, 'number')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode($order->number) ?>
@@ -74,7 +82,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Статус:
+                    <?= Html::tag('span', Html::activeLabel($order, 'status')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode($order->status) ?>
@@ -83,7 +91,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Дата выдачи:
+                    <?= Html::tag('span', Html::activeLabel($order, 'issuance_date')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode(Yii::$app->formatter->asDate($order->issuance_date)) ?>
@@ -92,7 +100,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Сумма по работам:
+                    <?= Html::tag('span', Html::activeLabel($order, 'works_cost')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode(Yii::$app->formatter->asCurrency(($order->works_cost))) ?>
@@ -101,7 +109,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Сумма по товарам:
+                    <?= Html::tag('span', Html::activeLabel($order, 'goods_cost')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode(Yii::$app->formatter->asCurrency(($order->goods_cost))) ?>
@@ -110,7 +118,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Сумма без скидки:
+                    <?= Html::tag('span', Html::activeLabel($order, 'net_price')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode(Yii::$app->formatter->asCurrency(($order->net_price))) ?>
@@ -119,7 +127,7 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Сумма скидки:
+                    <?= Html::tag('span', Html::activeLabel($order, 'discount')) ?>
                 </div>
                 <div class="col-md-auto">
                     <?= Html::encode(Yii::$app->formatter->asCurrency(($order->discount))) ?>
@@ -130,15 +138,15 @@ use yii\helpers\Html;
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
-                    Сумма к оплате:
+                    <?= Html::tag('span', Html::activeLabel($order, 'amount_payable')) ?>
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asCurrency(($order->amount - $order->payment_amount))) ?>
+                    <?= Html::encode(Yii::$app->formatter->asCurrency($order->amountPayable)) ?>
                 </div>
             </div>
 
             <div class="d-grid gap-2 pt-3">
-                <button class="btn btn-primary" type="submit">Оплатить</button>
+                <?= Html::button('Оплатить', ['class' => 'btn btn-primary', 'type' => 'submit']) ?>
             </div>
         </div>
     </div>
