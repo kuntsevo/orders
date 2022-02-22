@@ -11,6 +11,8 @@ class Orders extends ActiveRecord
 {
 	use DataExtractor;
 
+	private $WORK_ORDER = 'ЗаказНаряд';
+	
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
 	//---------------------------------------------------------------------------
@@ -135,7 +137,7 @@ class Orders extends ActiveRecord
 	private function attributeLabelsByDocumentType(): array
 	{
 		switch ($this->document_type) {
-			case 'ЗаказНаряд':
+			case $this->WORK_ORDER:
 				return $this->workOrderAttributeLabels();
 				break;
 			default:
@@ -171,7 +173,7 @@ class Orders extends ActiveRecord
 	public function tableAttributesSequence(string $table_name): array
 	{
 		switch ($this->document_type) {
-			case 'ЗаказНаряд':
+			case $this->WORK_ORDER:
 				return $this->workOrderTableAttributesSequence($table_name);
 				break;
 			default:
