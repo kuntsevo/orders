@@ -64,5 +64,6 @@ class Staff extends ActiveRecord
 	public function afterFind()
 	{
 		$this->photo = empty($this->photo) ? Url::to('@staffPhotoBlanc') : $this->photo;
+		return parent::afterFind();
 	}
 }
