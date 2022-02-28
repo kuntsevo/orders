@@ -11,7 +11,7 @@ use yii\helpers\Html;
 
 <div class="site-success">
     <div class="container">
-        <? $client_name = $customer->first_name ? $customer->first_name : "уважаемый клиент"; ?>
+        <?php $client_name = $customer->first_name ? $customer->first_name : "уважаемый клиент"; ?>
 
         <h2> <?= "Добрый день, {$client_name}!" ?></h2>
 
