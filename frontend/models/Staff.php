@@ -53,10 +53,14 @@ class Staff extends ActiveRecord
 	{
 		$originalPath = "@images/original/$this->photo";
 		$tumbPath = "@images/tumb/$this->photo";
-		if (!file_exists($tumbPath)) {
-			$imagick = new \Imagick(Yii::getAlias($originalPath));
-			$imagick->thumbnailImage($this->PHOTO_WIDTH, $this->PHOTO_HEIGHT, true, true);
-			$imagick->writeImages(Yii::getAlias($tumbPath), false);
+		if (!file_exists($tumbPath)) {			
+			$img = imageCreateFromJpeg(Yii::getAlias($originalPath));
+			list($width, $height) = getimagesize(Yii::getAlias($originalPath));
+			$new_height = ($this->PHOTO_WIDTH / $width) * $height;
+			$new_width = $this->PHOTO_WIDTH;
+			$tmp = imageCreateTrueColor($new_width, $new_height);						
+			imagecopyresampled($tmp, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+			imageJpeg($tmp, Yii::getAlias($tumbPath), 100);
 		}
 
 		return "@web/images/tumb/$this->photo";
