@@ -15,12 +15,12 @@ use yii\helpers\Html;
 
         <h2> <?= "Добрый день, {$client_name}!" ?></h2>
 
-        <? if (!$orders) : ?>
+        <?php if (!$orders) : ?>
             <?= Html::tag('p', Html::encode('Нет документов в работе')); ?>
-        <? else : ?>
+        <?php else : ?>
             <?= Html::tag('h4', Html::encode('Активные работы:')) ?>
 
-            <? foreach ($orders as $order) :
+            <?php foreach ($orders as $order) :
                 $vehicle = $order->vehicle; ?>
 
                 <div class="border border-primary rounded p-2 mb-3">
@@ -71,7 +71,7 @@ use yii\helpers\Html;
                         ) ?>
                     </div>
                 </div>
-            <? endforeach; ?>
-        <? endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 </div>
