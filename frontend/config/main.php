@@ -41,7 +41,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'enableStrictParsing' => true, //только перечисленные ниже
-            'rules' => [                
+            'rules' => [
                 '<action:(|show-order|show-table|test)>' => 'order/<action>',
             ],
         ],
@@ -50,7 +50,7 @@ return [
             'path' => '@console/runtime/queue',
             'as log' => \yii\queue\LogBehavior::class,
             'attempts' => 1,
-        ],        
+        ],
     ],
     'aliases' => [
         //---------------------------------------------------------------------------
@@ -60,6 +60,7 @@ return [
         '@orderTable' => 'order/show-table',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
+        '@images' => __DIR__ . '/../web/images',
     ],
     'params' => $params,
 ];

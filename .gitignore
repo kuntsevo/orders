@@ -42,3 +42,10 @@ phpunit.phar
 /backend/web/index-test.php
 /backend/web/robots.txt
 .vscode/launch.json
+
+/frontend/web/images/original/*
+/frontend/web/images/tumb/*
+!/frontend/web/images/**/.keep
+
+
+
