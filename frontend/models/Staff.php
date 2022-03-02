@@ -5,6 +5,7 @@ namespace frontend\models;
 use frontend\traits\DataExtractor;
 use Yii;
 use \yii\db\ActiveRecord;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 class Staff extends ActiveRecord
@@ -51,19 +52,50 @@ class Staff extends ActiveRecord
 
 	public function getPhotoTumb()
 	{
-		$originalPath = "@images/original/$this->photo";
-		$tumbPath = "@images/tumb/$this->photo";
-		if (!file_exists($tumbPath)) {			
-			$img = imageCreateFromJpeg(Yii::getAlias($originalPath));
-			list($width, $height) = getimagesize(Yii::getAlias($originalPath));
+		$originalPath = Yii::getAlias("@images/$this->photo");
+		$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
+		if (!file_exists($published_url)) {
+			list($width, $height, $imageType) = getImageSize($originalPath);
+			$published_url = Yii::$app->assetManager->publish($originalPath)[1];
 			$new_height = ($this->PHOTO_WIDTH / $width) * $height;
 			$new_width = $this->PHOTO_WIDTH;
-			$tmp = imageCreateTrueColor($new_width, $new_height);						
-			imagecopyresampled($tmp, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-			imageJpeg($tmp, Yii::getAlias("@webroot/assets/$this->photo"), 100);
+
+			$thumb = imageCreateTrueColor($new_width, $new_height);
+
+			switch ($imageType) {
+				case IMG_JPG:
+					$imageCreate = 'imageCreateFromJpeg';
+					break;
+				case IMG_PNG:
+					$imageCreate = 'imagecreatefrompng';
+					break;
+				default:
+					// TODO ошибка
+					break;
+			}
+
+			$original = $imageCreate($originalPath);
+
+			imageCopyResampled($thumb, $original, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+
+			switch ($imageType) {
+				case IMG_JPG:
+					$imageSave = 'imageJpeg';
+					break;
+				case IMG_PNG:
+					$imageSave = 'imagePng';
+					break;
+				default:
+					// TODO ошибка
+					break;
+			}
+
+			$imageSave($thumb, Yii::getAlias("@webroot{$published_url}"), 100);
+
+			imageDestroy($thumb);
 		}
 
-		return "@webroot/images/tumb/$this->photo";
+		return Yii::getAlias("@web{$published_url}");
 	}
 
 	public function getStaffInfo()
