@@ -43,9 +43,9 @@ phpunit.phar
 /backend/web/robots.txt
 .vscode/launch.json
 
-/frontend/web/images/original/*
-/frontend/web/images/tumb/*
-!/frontend/web/assets/images/thumbs/.keep
+/frontend/web/uploads/*
+!/frontend/web/uploads/.keep
+
 
 
 

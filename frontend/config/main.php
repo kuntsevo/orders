@@ -60,7 +60,7 @@ return [
         '@orderTable' => 'order/show-table',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
-        '@images' => __DIR__ . '/../web/images',
+        '@images' => __DIR__ . '/../web/uploads',
     ],
     'params' => $params,
 ];
