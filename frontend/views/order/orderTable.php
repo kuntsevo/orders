@@ -15,19 +15,19 @@ use yii\helpers\Html;
         <table class="table">
             <thead>
                 <tr>
-                    <? foreach ($tableAttributes as $attribute_name => $alias) : ?>
+                    <?php foreach ($tableAttributes as $attribute_name => $alias) : ?>
                         <th scope="col"><?= Html::encode($alias) ?></th>
-                    <? endforeach; ?>
+                    <?php endforeach; ?>
                 </tr>
             </thead>
             <tbody>
-                <? foreach ($order->{$table_name} as $row) : ?>
+                <?php foreach ($order->{$table_name} as $row) : ?>
                     <tr>
-                        <? foreach ($tableAttributes as $attribute_name => $alias) : ?>
+                        <?php foreach ($tableAttributes as $attribute_name => $alias) : ?>
                             <td><?= Html::encode($row[$attribute_name]) ?></td>
-                        <? endforeach; ?>
+                        <?php endforeach; ?>
                     </tr>
-                <? endforeach; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
