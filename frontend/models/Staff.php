@@ -60,10 +60,10 @@ class Staff extends ActiveRecord
 			$new_width = $this->PHOTO_WIDTH;
 			$tmp = imageCreateTrueColor($new_width, $new_height);						
 			imagecopyresampled($tmp, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-			imageJpeg($tmp, Yii::getAlias($tumbPath), 100);
+			imageJpeg($tmp, Yii::getAlias("@webroot/assets/$this->photo"), 100);
 		}
 
-		return "@web/images/tumb/$this->photo";
+		return "@webroot/images/tumb/$this->photo";
 	}
 
 	public function getStaffInfo()

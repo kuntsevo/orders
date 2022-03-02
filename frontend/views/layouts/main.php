@@ -5,12 +5,14 @@
 
 use common\widgets\Alert;
 use frontend\assets\AppAsset;
+use frontend\assets\StaticAsset;
 use yii\bootstrap4\Breadcrumbs;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 
 AppAsset::register($this);
+StaticAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

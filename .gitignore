@@ -45,7 +45,7 @@ phpunit.phar
 
 /frontend/web/images/original/*
 /frontend/web/images/tumb/*
-!/frontend/web/images/**/.keep
+!/frontend/web/assets/images/thumbs/.keep
 
 
 
