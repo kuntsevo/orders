@@ -108,7 +108,7 @@ class OrderController extends Controller
 
 		$order = Orders::findOrderByUid($order_id);
 
-		$this->view->title = "Заказ № $order->number";
+		$this->view->title = "Заказ №$order->number";
 
 		return $this->render('orderItem', compact('order'));
 	}

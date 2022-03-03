@@ -144,6 +144,14 @@ use yii\helpers\Url;
                 ) ?>
             </div>
 
+            <div class="row justify-content-md-left">
+                <?= Html::a(
+                    'Рекомендации &rarr;',
+                    ['@orderTable', 'order_id' => $order->uid, 'table_name' => 'recommendations'],
+                    ['class' => 'btn btn-link', 'role' => 'button']
+                ) ?>
+            </div>
+
             <hr>
 
             <div class="row justify-content-md-left">

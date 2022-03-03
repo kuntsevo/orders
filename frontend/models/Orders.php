@@ -12,7 +12,7 @@ class Orders extends ActiveRecord
 	use DataExtractor;
 
 	private $WORK_ORDER = 'ЗаказНаряд';
-	
+
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
 	//---------------------------------------------------------------------------
@@ -72,6 +72,11 @@ class Orders extends ActiveRecord
 			['base_id' => 'base_id']
 		)
 			->where(['employee_id' => $this->staff->employee_id]);
+	}
+
+	public function getRecommendations()
+	{
+		return $this->hasMany(Recommendations::class, ['uid' => 'uid']);
 	}
 
 	public function getAmountPayable()
@@ -197,6 +202,7 @@ class Orders extends ActiveRecord
 				'good_net_price' => 'Сумма без скидки',
 				'good_amount' => 'Сумма',
 			],
+			'recommendations' => (new Recommendations())->attributeLabels(),
 		];
 
 		return ArrayHelper::getValue($attributesSequence, $table_name, []);
