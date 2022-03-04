@@ -1,4 +1,9 @@
 <?php
+
+use yii\web\UrlNormalizer;
+
+$idPattern = '(\w|-)+';
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -41,8 +46,14 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'enableStrictParsing' => true, //только перечисленные ниже
+            'normalizer' => [
+                'class' => 'yii\web\UrlNormalizer',
+                'action' => UrlNormalizer::ACTION_REDIRECT_TEMPORARY,
+            ],
             'rules' => [
-                '<action:(|show-order|show-table|test)>' => 'order/<action>',
+                "<customer:$idPattern>/<controller>/<order:$idPattern>/<action>/<component:\w+>" => '<controller>/<action>',
+                "<customer:$idPattern>/<controller>/<order:$idPattern>" => '<controller>/show',
+                "<customer:$idPattern>/<controller>" => '<controller>/index',
             ],
         ],
         'queue' => [
@@ -55,9 +66,9 @@ return [
     'aliases' => [
         //---------------------------------------------------------------------------
         // псевдонимы URL
-        '@orders' => '/',
-        '@orderItem' => 'order/show-order',
-        '@orderTable' => 'order/show-table',
+        '@order' => '/',
+        '@orderItem' => 'order/show',
+        '@orderTable' => 'order/table',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
         '@images' => __DIR__ . '/../web/uploads',

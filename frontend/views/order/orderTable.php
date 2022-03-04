@@ -6,12 +6,19 @@
 /* @var $exception Exception */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
 
 <div class="site-success">
     <div class="container">
-        <?= $this->render('_backButton') ?>
+        <?= $this->render(
+            '_backButton',
+            ['route' => Url::to([
+                '@orderItem',
+                'customer' => $order->customer->uid, 'order' => $order->uid
+            ])]
+        ) ?>
         <table class="table">
             <thead>
                 <tr>

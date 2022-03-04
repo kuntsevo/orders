@@ -50,7 +50,7 @@ class Staff extends ActiveRecord
 		return static::findOne($uid);
 	}
 
-	public function getPhotoTumb()
+	public function getPhotoThumb()
 	{
 		$originalPath = Yii::getAlias("@images/$this->photo");
 		$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
@@ -116,7 +116,7 @@ class Staff extends ActiveRecord
 
 	public function afterFind()
 	{
-		$this->photo = empty($this->photo) ? Url::to('@staffPhotoBlanc') : $this->photoTumb;
+		$this->photo = empty($this->photo) ? Url::to('@staffPhotoBlanc') : $this->photoThumb;
 		return parent::afterFind();
 	}
 }

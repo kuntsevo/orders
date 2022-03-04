@@ -21,7 +21,10 @@ use yii\helpers\Url;
         ?>
 
         <div>
-            <?= $this->render('_backButton') ?>
+            <?= $this->render(
+                '_backButton',
+                ['route' => Url::to(['order/index', 'customer' => $order->customer->uid])]
+            ) ?>
 
             <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
 
@@ -54,7 +57,10 @@ use yii\helpers\Url;
             <div class="card my-2 py-1 border border-primary rounded" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <?= Html::img($staff->photo, ['alt' => Html::encode($staff->name), 'class' => 'img-fluid rounded-start']) ?>
+                        <?= Html::img(
+                            $staff->photo,
+                            ['alt' => Html::encode($staff->name), 'class' => 'img-fluid rounded-start']
+                        ) ?>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -131,7 +137,10 @@ use yii\helpers\Url;
             <div class="row justify-content-md-left">
                 <?= Html::a(
                     'Работы &rarr;',
-                    ['@orderTable', 'order_id' => $order->uid, 'table_name' => 'works'],
+                    [
+                        '@orderTable', 'customer' => $order->customer->uid,
+                        'order' => $order->uid, 'component' => 'works'
+                    ],
                     ['class' => 'btn btn-link', 'role' => 'button']
                 ) ?>
             </div>
@@ -139,7 +148,10 @@ use yii\helpers\Url;
             <div class="row justify-content-md-left">
                 <?= Html::a(
                     'Запчасти &rarr;',
-                    ['@orderTable', 'order_id' => $order->uid, 'table_name' => 'goods'],
+                    [
+                        '@orderTable', 'customer' => $order->customer->uid,
+                        'order' => $order->uid, 'component' => 'goods'
+                    ],
                     ['class' => 'btn btn-link', 'role' => 'button']
                 ) ?>
             </div>
@@ -147,7 +159,10 @@ use yii\helpers\Url;
             <div class="row justify-content-md-left">
                 <?= Html::a(
                     'Рекомендации &rarr;',
-                    ['@orderTable', 'order_id' => $order->uid, 'table_name' => 'recommendations'],
+                    [
+                        '@orderTable', 'customer' => $order->customer->uid,
+                        'order' => $order->uid, 'component' => 'recommendations'
+                    ],
                     ['class' => 'btn btn-link', 'role' => 'button']
                 ) ?>
             </div>

@@ -66,7 +66,7 @@ use yii\helpers\Html;
                         <?= Html::button('Оплатить', ['class' => 'btn btn-primary', 'type' => 'submit']) ?>
                         <?= Html::a(
                             'Подробнее',
-                            ['@orderItem', 'order_id' => $order->uid],
+                            ['@orderItem', 'customer' => $customer->uid, 'order' => $order->uid],
                             ['class' => 'btn btn-outline-primary', 'role' => 'button']
                         ) ?>
                     </div>
