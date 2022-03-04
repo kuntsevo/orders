@@ -36,7 +36,7 @@ class OrderController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'index', 'show-order', 'show-table'],
+						'actions' => ['test', 'index', 'show', 'table'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -52,8 +52,8 @@ class OrderController extends Controller
 		return [
 			'test' => ['GET'],
 			'index' => ['GET'],
-			'show-order' => ['GET'],
-			'show-table' => ['GET'],
+			'show' => ['GET'],
+			'table' => ['GET'],
 		];
 	}
 
@@ -73,7 +73,7 @@ class OrderController extends Controller
 		//	$this->redirect($this->baseUrlRedirect);
 
 		// $uid = Yii::$app->request->get('uid', '');
-		$customer_id = Yii::$app->request->get('id');
+		$customer_id = Yii::$app->request->get('customer');
 
 		if (is_null($customer_id))
 			$this->redirect($this->baseUrlRedirect);
@@ -100,9 +100,9 @@ class OrderController extends Controller
 		]);
 	}
 
-	public function actionShowOrder()
+	public function actionShow()
 	{
-		$order_id = Yii::$app->request->get('order_id');
+		$order_id = Yii::$app->request->get('order');
 		if (is_null($order_id))
 			$this->redirect($this->baseUrlRedirect);
 
@@ -113,10 +113,10 @@ class OrderController extends Controller
 		return $this->render('orderItem', compact('order'));
 	}
 
-	public function actionShowTable()
+	public function actionTable()
 	{
-		$order_id = Yii::$app->request->get('order_id');
-		$table_name = Yii::$app->request->get('table_name');
+		$order_id = Yii::$app->request->get('order');
+		$table_name = Yii::$app->request->get('component');
 
 		if (is_null($order_id) || is_null($table_name))
 			$this->redirect($this->baseUrlRedirect);
