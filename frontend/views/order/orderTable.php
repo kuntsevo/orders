@@ -19,23 +19,28 @@ use yii\helpers\Url;
                 'customer' => $order->customer->uid, 'order' => $order->uid
             ])]
         ) ?>
-        <table class="table">
-            <thead>
-                <tr>
-                    <?php foreach ($tableAttributes as $attribute_name => $alias) : ?>
-                        <th scope="col"><?= Html::encode($alias) ?></th>
-                    <?php endforeach; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($order->{$table_name} as $row) : ?>
+
+        <?php if (empty($order->{$table_name})) : ?>
+            <h4><?= Html::encode('Здесь пока ничего нет...') ?></h4>
+        <?php else : ?>
+            <table class="table">
+                <thead>
                     <tr>
                         <?php foreach ($tableAttributes as $attribute_name => $alias) : ?>
-                            <td><?= Html::encode($row[$attribute_name]) ?></td>
+                            <th scope="col"><?= Html::encode($alias) ?></th>
                         <?php endforeach; ?>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($order->{$table_name} as $row) : ?>
+                        <tr>
+                            <?php foreach ($tableAttributes as $attribute_name => $alias) : ?>
+                                <td><?= Html::encode($row[$attribute_name]) ?></td>
+                            <?php endforeach; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
     </div>
 </div>

@@ -2,10 +2,10 @@
 
 namespace frontend\models;
 
+use common\components\ImageHandler;
 use frontend\traits\DataExtractor;
 use Yii;
 use \yii\db\ActiveRecord;
-use yii\helpers\Html;
 use yii\helpers\Url;
 
 class Staff extends ActiveRecord
@@ -52,47 +52,21 @@ class Staff extends ActiveRecord
 
 	public function getPhotoThumb()
 	{
+		if (empty($this->photo)) {
+			return '';
+		}
+
 		$originalPath = Yii::getAlias("@images/$this->photo");
-		$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
-		if (!file_exists($published_url)) {
-			list($width, $height, $imageType) = getImageSize($originalPath);
-			$published_url = Yii::$app->assetManager->publish($originalPath)[1];
-			$new_height = ($this->PHOTO_WIDTH / $width) * $height;
-			$new_width = $this->PHOTO_WIDTH;
 
-			$thumb = imageCreateTrueColor($new_width, $new_height);
+		if (file_exists(Yii::$app->assetManager->getPublishedPath($originalPath))) {
+			$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
+		} else {
+			$imageHandler = new ImageHandler($originalPath);
+			$published_url = $imageHandler->resampledImage($this->PHOTO_WIDTH, $this->PHOTO_HEIGHT);
 
-			switch ($imageType) {
-				case IMG_JPG:
-					$imageCreate = 'imageCreateFromJpeg';
-					break;
-				case IMG_PNG:
-					$imageCreate = 'imagecreatefrompng';
-					break;
-				default:
-					// TODO ошибка
-					break;
+			if (empty($published_url)) {
+				return '';
 			}
-
-			$original = $imageCreate($originalPath);
-
-			imageCopyResampled($thumb, $original, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-
-			switch ($imageType) {
-				case IMG_JPG:
-					$imageSave = 'imageJpeg';
-					break;
-				case IMG_PNG:
-					$imageSave = 'imagePng';
-					break;
-				default:
-					// TODO ошибка
-					break;
-			}
-
-			$imageSave($thumb, Yii::getAlias("@webroot{$published_url}"), 100);
-
-			imageDestroy($thumb);
 		}
 
 		return Yii::getAlias("@web{$published_url}");
@@ -116,7 +90,8 @@ class Staff extends ActiveRecord
 
 	public function afterFind()
 	{
-		$this->photo = empty($this->photo) ? Url::to('@staffPhotoBlanc') : $this->photoThumb;
+		$photoThumb = $this->photoThumb;
+		$this->photo = empty($photoThumb) ? Url::to('@staffPhotoBlanc') : $photoThumb;
 		return parent::afterFind();
 	}
 }
