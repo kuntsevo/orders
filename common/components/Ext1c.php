@@ -31,7 +31,7 @@ class Ext1c extends Component
     {	
 		$params = [];
 		$params['id'] = $id;
-		//$res_data = $this->request(self::HOST.'/'.self::GURL.''.$hs.'/hs/OrderCallback/{action}', $params);
+		$res_data = $this->request(self::HOST.'/'.self::GURL.''.$hs.'/hs/OrderCallback/{action}', $params);
         		
 		return $res_data;
     }
