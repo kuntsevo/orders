@@ -51,9 +51,11 @@ return [
                 'action' => UrlNormalizer::ACTION_REDIRECT_TEMPORARY,
             ],
             'rules' => [
-                "<customer:$idPattern>/<controller>/<order:$idPattern>/<action>/<component:\w+>" => '<controller>/<action>',
-                "<customer:$idPattern>/<controller>/<order:$idPattern>" => '<controller>/show',
-                "<customer:$idPattern>/<controller>" => '<controller>/index',
+                "<customer:$idPattern>/order/<order:$idPattern>/<action>/<component:\w+>" => 'order/<action>',
+                "<customer:$idPattern>/order/<order:$idPattern>" => 'order/show',
+                "<customer:$idPattern>/order" => 'order/index',
+                "<customer:$idPattern>/document/<order:$idPattern>/<component:\w+>" => 'document/show',
+                "<customer:$idPattern>/document/<order:$idPattern>" => 'document/index',                
             ],
         ],
         'queue' => [
@@ -69,9 +71,11 @@ return [
         '@order' => '/',
         '@orderItem' => 'order/show',
         '@orderTable' => 'order/table',
+        '@documents' => 'document/index',
+        '@document' => 'document/show',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
-        '@images' => __DIR__ . '/../web/uploads',
+        '@files' => __DIR__ . '/../web/uploads',
     ],
     'params' => $params,
 ];

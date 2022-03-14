@@ -22,13 +22,13 @@ use yii\helpers\Url;
 
         <div>
             <?= $this->render(
-                '_backButton',
+                '..\partials\_backButton',
                 ['route' => Url::to(['order/index', 'customer' => $order->customer->uid])]
             ) ?>
 
             <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
 
-            <?= $this->render('_vehicleInfo', compact('vehicle')) ?>
+            <?= $this->render('..\partials\_vehicleInfo', compact('vehicle')) ?>
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
@@ -149,8 +149,10 @@ use yii\helpers\Url;
                 <?= Html::a(
                     'Запчасти &rarr;',
                     [
-                        '@orderTable', 'customer' => $order->customer->uid,
-                        'order' => $order->uid, 'component' => 'goods'
+                        '@orderTable',
+                        'customer' => $order->customer->uid,
+                        'order' => $order->uid,
+                        'component' => 'goods',
                     ],
                     ['class' => 'btn btn-link', 'role' => 'button']
                 ) ?>
@@ -160,8 +162,22 @@ use yii\helpers\Url;
                 <?= Html::a(
                     'Рекомендации &rarr;',
                     [
-                        '@orderTable', 'customer' => $order->customer->uid,
-                        'order' => $order->uid, 'component' => 'recommendations'
+                        '@orderTable',
+                        'customer' => $order->customer->uid,
+                        'order' => $order->uid,
+                        'component' => 'recommendations',
+                    ],
+                    ['class' => 'btn btn-link', 'role' => 'button']
+                ) ?>
+            </div>
+
+            <div class="row justify-content-md-left">
+                <?= Html::a(
+                    'Документы &rarr;',
+                    [
+                        '@documents',
+                        'customer' => $order->customer->uid,
+                        'order' => $order->uid,
                     ],
                     ['class' => 'btn btn-link', 'role' => 'button']
                 ) ?>
