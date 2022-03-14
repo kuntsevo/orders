@@ -56,7 +56,7 @@ class Staff extends ActiveRecord
 			return '';
 		}
 
-		$originalPath = Yii::getAlias("@images/$this->photo");
+		$originalPath = Yii::getAlias("@files/$this->photo");
 
 		if (file_exists(Yii::$app->assetManager->getPublishedPath($originalPath))) {
 			$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);

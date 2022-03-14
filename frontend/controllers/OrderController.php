@@ -2,22 +2,16 @@
 
 namespace frontend\controllers;
 
+use common\components\DocumentHandler;
 use Yii;
-use yii\base\InvalidArgumentException;
-use yii\web\BadRequestHttpException;
-//use yii\web\NotFoundHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-//use frontend\models\MethodLog; //модель для ведения лога
-//use frontend\models\RequestData; //модель обмена с 1с
 use frontend\models\Orders;
-use frontend\models\Bases;
-use common\jobs\SendTo1CJob;
 use frontend\models\Customers;
+use yii\web\ServerErrorHttpException;
 
 /**
- * Site controller
+ * Order controller
  */
 class OrderController extends Controller
 {
@@ -108,7 +102,7 @@ class OrderController extends Controller
 
 		$order = Orders::findOrderByUid($order_id);
 
-		$this->view->title = "Заказ №$order->number";
+		$this->view->title = "№$order->number";
 
 		return $this->render('orderItem', compact('order'));
 	}
