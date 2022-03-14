@@ -25,7 +25,7 @@ use yii\helpers\Html;
 
                 <div class="border border-primary rounded p-2 mb-3">
                     <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
-                    <?= $this->render('..\partials\_vehicleInfo', compact('vehicle')) ?>
+                    <?= $this->render('../partials/_vehicleInfo', compact('vehicle')) ?>
 
                     <hr>
                     <div class="row justify-content-md-left">
