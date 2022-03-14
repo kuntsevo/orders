@@ -13,7 +13,7 @@ use yii\helpers\Url;
 <div class="site-success">
     <div class="container">
         <?= $this->render(
-            '..\partials\_backButton',
+            '../partials/_backButton',
             ['route' => Url::to([
                 '@orderItem',
                 'customer' => $order->customer->uid, 'order' => $order->uid

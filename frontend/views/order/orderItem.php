@@ -22,13 +22,13 @@ use yii\helpers\Url;
 
         <div>
             <?= $this->render(
-                '..\partials\_backButton',
+                '../partials/_backButton',
                 ['route' => Url::to(['order/index', 'customer' => $order->customer->uid])]
             ) ?>
 
             <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
 
-            <?= $this->render('..\partials\_vehicleInfo', compact('vehicle')) ?>
+            <?= $this->render('../partials/_vehicleInfo', compact('vehicle')) ?>
 
             <div class="row justify-content-md-left">
                 <div class="col-md-auto">
