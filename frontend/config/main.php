@@ -52,6 +52,7 @@ return [
             ],
             'rules' => [
                 "<customer:$idPattern>/order/<order:$idPattern>/<action>/<component:\w+>" => 'order/<action>',
+                "<customer:$idPattern>/order/<order:$idPattern>/<action>" => 'order/<action>',
                 "<customer:$idPattern>/order/<order:$idPattern>" => 'order/show',
                 "<customer:$idPattern>/order" => 'order/index',
                 "<customer:$idPattern>/document/<order:$idPattern>/<component:\w+>" => 'document/show',

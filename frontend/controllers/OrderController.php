@@ -2,13 +2,12 @@
 
 namespace frontend\controllers;
 
-use common\components\DocumentHandler;
+use common\components\Payment;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use frontend\models\Orders;
 use frontend\models\Customers;
-use yii\web\ServerErrorHttpException;
 
 /**
  * Order controller
@@ -30,7 +29,7 @@ class OrderController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'index', 'show', 'table'],
+						'actions' => ['test', 'index', 'show', 'table', 'pay'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -48,6 +47,7 @@ class OrderController extends Controller
 			'index' => ['GET'],
 			'show' => ['GET'],
 			'table' => ['GET'],
+			'pay' => ['GET'],
 		];
 	}
 
@@ -120,6 +120,19 @@ class OrderController extends Controller
 
 		return $this->render('orderTable', compact(['order', 'table_name', 'tableAttributes']));
 	}
+
+	public function actionPay()
+	{
+		$order_id = Yii::$app->request->get('order');
+		if (is_null($order_id))
+			$this->redirect($this->baseUrlRedirect);
+
+		$order = Orders::findOrderByUid($order_id);
+
+		(new Payment())->payOrder($order);
+
+	}
+
 	//---------------------------------------------------------------------------
 	protected function setIP($ip)
 	//---------------------------------------------------------------------------
