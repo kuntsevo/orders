@@ -1,9 +1,6 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $name string */
-/* @var $message string */
-/* @var $exception Exception */
 
 use yii\helpers\Html;
 
@@ -65,7 +62,7 @@ use yii\helpers\Html;
                     <div class="d-grid gap-2 pt-3">
                         <?= Html::a(
                             'Оплатить',
-                            ['order/pay', 'customer' => $customer->uid, 'order' => $order->uid],
+                            ['payment/index', 'customer' => $customer->uid, 'order' => $order->uid],
                             ['class' => 'btn btn-outline-primary', 'role' => 'button']
                         ) ?>
                         <?= Html::a(

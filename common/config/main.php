@@ -23,4 +23,5 @@ return [
             'currencyCode' => 'RUB',
         ],
     ],
+    'language' => 'ru-RU',
 ];

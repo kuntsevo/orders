@@ -72,7 +72,7 @@ class Ext1c extends Component
 		return HelpersJson::decode($result, $asArray);
 	}
 
-	public function putJSON(string $base_id, array $body = [])
+	public function putJSON(string $base_id, array $body = [], bool $asArray = true)
 	{
 		$body_json = HelpersJson::encode($body);
 		$this->options = [
@@ -80,7 +80,8 @@ class Ext1c extends Component
 			CURLOPT_POSTFIELDS => $body_json,
 		];
 
-		return $this->httpService1CRequest($base_id);
+		$result = $this->httpService1CRequest($base_id);
+		return HelpersJson::decode($result, $asArray);
 	}
 
 	public function downloadFile(string $base_id, array $config = [])
@@ -123,10 +124,6 @@ class Ext1c extends Component
 
 		$result = curl_exec($curl);
 		$info = curl_getinfo($curl);
-
-		if ($info['http_code'] != 200) {
-			throw new ServerErrorHttpException();
-		}
 
 		curl_close($curl);
 

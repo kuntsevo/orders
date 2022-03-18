@@ -2,20 +2,22 @@
 
 namespace frontend\controllers;
 
-use common\components\DocumentHandler;
+use common\components\Payment;
+use common\components\payment_types\fabrics\InternetAcquiringFabric;
+use frontend\models\Orders;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use frontend\models\Orders;
-use yii\web\ServerErrorHttpException;
+use yii\web\NotFoundHttpException;
 
 /**
- * Document controller
+ * Payment controller
  */
-class DocumentController extends Controller
+class PaymentController extends Controller
 {
 	private $_baseurl_redirect = 'https://kuntsevo.com';
-	
+	private $payment_handler;
+
 	//---------------------------------------------------------------------------
 	public function behaviors()
 	//---------------------------------------------------------------------------
@@ -26,7 +28,7 @@ class DocumentController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['index', 'show'],
+						'actions' => ['index', 'pay'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -41,7 +43,7 @@ class DocumentController extends Controller
 	{
 		return [
 			'index' => ['GET'],
-			'show' => ['GET'],
+			'pay' => ['GET'],
 		];
 	}
 
@@ -50,33 +52,38 @@ class DocumentController extends Controller
 	//---------------------------------------------------------------------------
 	{
 		$order_id = Yii::$app->request->get('order');
+		if (is_null($order_id))
+			return $this->redirect($this->baseUrlRedirect);
+
 		$order = Orders::findOrderByUid($order_id);
-		$document_list = (new DocumentHandler())->getDocumentTypes($order);
 
-		if (!is_array($document_list)) {
-			throw new ServerErrorHttpException('Не удалось получить список печатных форм документа');
-		}
+		$payment_types = Payment::$payment_types;
 
-		asort($document_list);
-
-		$this->view->title = 'Документы';
-
-		return $this->render('documentList', compact('order', 'document_list'));
+		return $this->render('index', compact('order', 'payment_types'));
 	}
 
-	public function actionShow()
+	public function actionPay()
 	{
-		$document_type = Yii::$app->request->get('component');
 		$order_id = Yii::$app->request->get('order');
+		if (is_null($order_id))
+			return $this->redirect($this->baseUrlRedirect);
+
+		$payment_type = Yii::$app->request->get('component');
+		if (is_null($payment_type))
+			return $this->redirect($this->baseUrlRedirect);
+
+		switch ($payment_type) {
+			case 'internet_acquiring':
+				$this->payment_handler = new InternetAcquiringFabric($this);
+				break;
+			default:
+				new NotFoundHttpException('Неизвестный тип платежа');
+				break;
+		}
+		
 		$order = Orders::findOrderByUid($order_id);
 
-		$binairy = (new DocumentHandler())->download($order, $document_type);
-
-		if (!is_string($binairy) or empty($binairy)) {
-			throw new ServerErrorHttpException('Не удалось получить документ');
-		}
-
-		return Yii::$app->response->sendContentAsFile($binairy, "$order->number $document_type.pdf");
+		return $this->payment_handler->payOrder($order);
 	}
 
 	//---------------------------------------------------------------------------

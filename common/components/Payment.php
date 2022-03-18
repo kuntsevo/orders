@@ -2,18 +2,32 @@
 
 namespace common\components;
 
+use common\components\payment_types\handlers\InternetAcquiring;
+use common\interfaces\IPayment;
 use frontend\models\Orders;
-use yii\base\BaseObject;
+use yii\web\Controller;
 
-class Payment extends BaseObject
+class Payment
 {
-	const HTTP_TEMPLATE_PAYMENTS = 'payments';
+	static $payment_types = ['internet_acquiring' => 'Интернет-эквайринг'];
+
+	private $controller;
+
+    public function __construct(Controller $controller)
+    {
+        $this->controller = $controller;
+    }
 
 	public function payOrder(Orders $order)
 	{
-		$config = ['order_type' => $order->document_type, 'uid' => $order->uid];
-		$request_handler = new Ext1c(self::HTTP_TEMPLATE_PAYMENTS);
+		$payment_handler = $this->createPayment($this->controller);
 
-		return $request_handler->putJSON($order->base_id, $config);
+		return $payment_handler->payOrder($order);
+	}
+
+	private function createPayment(Controller $controller): IPayment
+	{
+		// переопределяем в наследниках
+		return new InternetAcquiring($controller); // значение по умолчанию
 	}
 }

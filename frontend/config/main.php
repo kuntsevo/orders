@@ -56,7 +56,10 @@ return [
                 "<customer:$idPattern>/order/<order:$idPattern>" => 'order/show',
                 "<customer:$idPattern>/order" => 'order/index',
                 "<customer:$idPattern>/document/<order:$idPattern>/<component:\w+>" => 'document/show',
-                "<customer:$idPattern>/document/<order:$idPattern>" => 'document/index',                
+                "<customer:$idPattern>/document/<order:$idPattern>" => 'document/index', 
+                "<customer:$idPattern>/payment/<order:$idPattern>/<action>/<component:\w+>" => 'payment/<action>', 
+                "<customer:$idPattern>/payment/<order:$idPattern>/<action>" => 'payment/<action>',          
+                "<customer:$idPattern>/payment/<order:$idPattern>" => 'payment/index',
             ],
         ],
         'queue' => [
@@ -69,7 +72,7 @@ return [
     'aliases' => [
         //---------------------------------------------------------------------------
         // псевдонимы URL
-        '@order' => '/',
+        '@orders' => 'order/index',
         '@orderItem' => 'order/show',
         '@orderTable' => 'order/table',
         '@documents' => 'document/index',
