@@ -2,13 +2,11 @@
 
 namespace frontend\controllers;
 
-use common\components\DocumentHandler;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use frontend\models\Orders;
 use frontend\models\Customers;
-use yii\web\ServerErrorHttpException;
 
 /**
  * Order controller
@@ -120,6 +118,7 @@ class OrderController extends Controller
 
 		return $this->render('orderTable', compact(['order', 'table_name', 'tableAttributes']));
 	}
+
 	//---------------------------------------------------------------------------
 	protected function setIP($ip)
 	//---------------------------------------------------------------------------
