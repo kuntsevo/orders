@@ -20,18 +20,31 @@ use yii\helpers\Url;
 
         <?php foreach ($payment_types as $type => $alias) : ?>
             <div class="row justify-content-md-left">
-                <?= Html::a(
-                    $alias,
-                    ['payment/pay', 'customer' => $order->customer->uid, 'order' => $order->uid, 'component' => $type,],
-                    ['class' => 'btn btn-outline-primary', 'role' => 'button']
-                ) ?>
+                <button id=<?= $type ?> class="btn btn-primary" type="button" onclick="getInternetAcquiringUrl(this.id)">
+                    <span id=<?= "spinner_{$type}" ?> class="" style="width: 2rem; height: 2rem;" role="status"></span>
+                    <span><?= $alias ?></span>
+                </button>
             </div>
         <?php endforeach; ?>
     </div>
 </div>
 
 <?php
-if (isset($external_url)) {
-    $js = "window.open('$external_url')";
-    $this->registerJs($js, $position = static::POS_READY);
+$url = Url::to(['payment/pay', 'customer' => $order->customer->uid, 'order' => $order->uid, 'component' => $type], true);
+$js = <<< JS
+async function getInternetAcquiringUrl(id){
+    let elem = document.getElementById('spinner_' + id);
+    let spinnerElem = 'spinner-border';
+    elem.classList.toggle(spinnerElem);
+    let response = await fetch('{$url}');
+    if (response.ok) {       
+        let json = await response.json();
+        window.open(json.url);
+        elem.classList.toggle(spinnerElem);
+    } else {
+        console.error("Ошибка HTTP: " + response.status);
+    }
 }
+JS;
+
+$this->registerJs($js, $position = static::POS_BEGIN, $key = null);

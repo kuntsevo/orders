@@ -24,18 +24,21 @@ class InternetAcquiring implements IPayment
     {
         $config = [
             'order_type' => $order->document_type,
-            'uid' => $order->uid, 
+            'uid' => $order->uid,
             'payment_type' => self::PAYMENT_TYPE
         ];
 
         $request_handler = new Ext1c(self::HTTP_TEMPLATE_PAYMENTS);
 
         $result = $request_handler->putJSON($order->base_id, $config);
-        
+
         if (isset($result['url']) or !empty($result['url'])) {
             $external_url = trim($result['url']);
             $payment_types = Payment::$payment_types;
-            return $this->controller->render('index', compact('order', 'payment_types', 'external_url'));
+            $response = Yii::$app->response;
+            $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = ['url' => $external_url];
+            $response->send();
         }
 
         if (isset($result['message']) or !empty($result['message'])) {
