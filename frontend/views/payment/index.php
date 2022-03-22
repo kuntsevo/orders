@@ -21,7 +21,7 @@ use yii\helpers\Url;
         <?php foreach ($payment_types as $type => $alias) : ?>
             <div class="row justify-content-md-left">
                 <button id=<?= $type ?> class="btn btn-primary" type="button" onclick="getInternetAcquiringUrl(this.id)">
-                    <span id=<?= "spinner_{$type}" ?> class="" style="width: 2rem; height: 2rem;" role="status"></span>
+                    <span id=<?= "spinner_{$type}" ?> class="spinner-border-sm" role="status"></span>
                     <span><?= $alias ?></span>
                 </button>
             </div>
