@@ -1,0 +1,25 @@
+extends ../layouts/layout
+
+block content
+  +page-wrapper('payments__page')
+    - var customer = order.customer;
+    .payments__header
+      .container
+        a.back-link(href=_yii.app.urlHelper.to({0: '@orders', 'customer': customer.uid}))
+          +icon('back')
+        h1.page-title Способы оплаты
+    .container
+      .payments__list
+        unless payment_types
+          div
+            .desc Нет доступных способов оплаты
+        else
+          each alias, doc_type in payment_types
+            - var url = _yii.app.urlHelper.to({0: '@payment', 'customer': customer.uid, 'order': order.uid, 'component': doc_type}, true)
+            a.payments__list-item(id=doc_type, data-url=url, onClick='getInternetAcquiringUrl(this)')
+              img.img(src='../img/payments1.png' alt="")
+              div
+                .title #{alias}
+                .desc Оплата через СберБанк
+
+block footer

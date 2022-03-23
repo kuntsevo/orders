@@ -59,7 +59,7 @@ class PaymentController extends Controller
 
 		$payment_types = Payment::$payment_types;
 
-		return $this->render('index', compact('order', 'payment_types'));
+		return $this->render('index.pug', compact('order', 'payment_types'));
 	}
 
 	public function actionPay()

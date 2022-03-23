@@ -20,7 +20,7 @@ use yii\helpers\Url;
         <div>
             <?= $this->render(
                 '../partials/_backButton',
-                ['route' => Url::to(['order/index', 'customer' => $order->customer->uid])]
+                ['route' => Url::to(['@orders', 'customer' => $order->customer->uid])]
             ) ?>
 
             <?= Html::tag('h5', Html::encode($order->dealer->name)) ?>
@@ -194,7 +194,7 @@ use yii\helpers\Url;
             <div class="d-grid gap-2 pt-3">
                 <?= Html::a(
                     'Оплатить',
-                    ['payment/index', 'customer' => $order->customer->uid, 'order' => $order->uid],
+                    ['@payments', 'customer' => $order->customer->uid, 'order' => $order->uid],
                     ['class' => 'btn btn-primary', 'role' => 'button']
                 ) ?>
             </div>

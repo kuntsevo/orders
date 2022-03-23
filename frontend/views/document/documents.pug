@@ -1,0 +1,20 @@
+extends ../layouts/layout
+
+block content
+  +page-wrapper('docs__page')
+    - var customer = order.customer;
+    .docs__header
+      .container
+        a.back-link(href=_yii.app.urlHelper.to({0: '@orderItem', 'customer': customer.uid, 'order': order.uid}))
+          +icon('back')
+        h1.page-title Документы
+    .container
+      ul.docs__list
+        unless document_list
+          docs__list-item Нет доступных документов
+        else
+          each label, document_key in document_list
+            li
+              a.docs__list-item(href=_yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})) #{label}
+
+block footer

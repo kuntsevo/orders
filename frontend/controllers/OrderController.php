@@ -86,7 +86,7 @@ class OrderController extends Controller
 
 		$this->view->title = 'История обслуживания';
 
-		return $this->render('orderList', [
+		return $this->render('index.pug', [
 			'orders' => $customer_orders,
 			'customer' => $customer,
 		]);
@@ -102,7 +102,7 @@ class OrderController extends Controller
 
 		$this->view->title = "№$order->number";
 
-		return $this->render('orderItem', compact('order'));
+		return $this->render('order.pug', compact('order'));
 	}
 
 	public function actionTable()

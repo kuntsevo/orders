@@ -61,7 +61,7 @@ class DocumentController extends Controller
 
 		$this->view->title = 'Документы';
 
-		return $this->render('documentList', compact('order', 'document_list'));
+		return $this->render('documents.pug', compact('order', 'document_list'));
 	}
 
 	public function actionShow()

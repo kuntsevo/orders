@@ -62,8 +62,8 @@ use yii\helpers\Html;
                     <div class="d-grid gap-2 pt-3">
                         <?= Html::a(
                             'Оплатить',
-                            ['payment/index', 'customer' => $customer->uid, 'order' => $order->uid],
-                            ['class' => 'btn btn-outline-primary', 'role' => 'button']
+                            ['@payments', 'customer' => $customer->uid, 'order' => $order->uid],
+                            ['class' => 'btn btn-primary', 'role' => 'button']
                         ) ?>
                         <?= Html::a(
                             'Подробнее',
