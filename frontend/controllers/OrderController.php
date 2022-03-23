@@ -7,6 +7,7 @@ use yii\web\Controller;
 use yii\filters\AccessControl;
 use frontend\models\Orders;
 use frontend\models\Customers;
+use frontend\models\StatusHistory;
 
 /**
  * Order controller
@@ -28,7 +29,7 @@ class OrderController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'index', 'show', 'table'],
+						'actions' => ['test', 'index', 'show', 'table', 'status-history'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -46,6 +47,7 @@ class OrderController extends Controller
 			'index' => ['GET'],
 			'show' => ['GET'],
 			'table' => ['GET'],
+			'status-history' => ['GET'],
 		];
 	}
 
@@ -117,6 +119,19 @@ class OrderController extends Controller
 		$tableAttributes = $order->tableAttributesSequence($table_name);
 
 		return $this->render('orderTable', compact(['order', 'table_name', 'tableAttributes']));
+	}
+
+	public function actionStatusHistory()
+	{
+
+		$order_id = Yii::$app->request->get('order');
+		if (is_null($order_id))
+			$this->redirect($this->baseUrlRedirect);
+
+		$order = Orders::findOrderByUid($order_id);
+		$status_history = StatusHistory::getOrderStatusHistory($order_id);
+
+		return $this->render('status.pug', compact('status_history', 'order'));
 	}
 
 	//---------------------------------------------------------------------------

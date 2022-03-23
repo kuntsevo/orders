@@ -87,6 +87,7 @@ return [
         '@orders' => 'order/index',
         '@orderItem' => 'order/show',
         '@orderTable' => 'order/table',
+        '@statusHistory' => 'order/status-history',
         '@documents' => 'document/index',
         '@document' => 'document/show',
         '@payments' => 'payment/index',

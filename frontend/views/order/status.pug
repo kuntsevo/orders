@@ -1,20 +1,21 @@
-extends ./layout/layout
+extends ../layouts/layout
 
 block content
   +page-wrapper('status__page')
     .status__header
       .container
-        a.back-link(href="/")
+        a.back-link(href=_yii.app.urlHelper.to({0: '@orderItem', 'customer': order.customer.uid, 'order': order.uid}))
           +icon('back')
         .status__header-top
           .status__title История статусов
           .status__status В работе
     .status__content
       .container
-        .status__story
-          .status__story-item.is-finished Принят: #[span Вчера в 10:00]
-          .status__story-item.is-finished В работе: #[span Вчера в 11:00]
-          .status__story-item Готов к выдаче: #[span Завтра в 10:00]
-          .status__story-item Автомобиль выдан: #[span —]
+        unless status_history
+          .status__status История статусов отсутствует
+        else
+          .status__story
+            each statusItem in status_history
+              .status__story-item.is-finished #{statusItem.status}: #[span #{_yii.app.formatter.asDateTime(statusItem.date)}]
 
 block footer
