@@ -12,7 +12,7 @@ block content
           +icon('back')
         .order__header-top
           .order__title #{vehicle.model}
-          a.order__status(href="status.html") #{order.status}
+          a.order__status(href=_yii.app.urlHelper.to({0: '@statusHistory', 'customer': customer.uid, 'order': order.uid})) #{order.status}
         .order__header-bottom
           .order__address
             svg(viewBox="0 0 9 11" fill="none" xmlns="http://www.w3.org/2000/svg")
