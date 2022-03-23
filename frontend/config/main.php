@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 use yii\web\UrlNormalizer;
 
 $idPattern = '(\w|-)+';
@@ -56,9 +57,9 @@ return [
                 "<customer:$idPattern>/order/<order:$idPattern>" => 'order/show',
                 "<customer:$idPattern>/order" => 'order/index',
                 "<customer:$idPattern>/document/<order:$idPattern>/<component:\w+>" => 'document/show',
-                "<customer:$idPattern>/document/<order:$idPattern>" => 'document/index', 
-                "<customer:$idPattern>/payment/<order:$idPattern>/<action>/<component:\w+>" => 'payment/<action>', 
-                "<customer:$idPattern>/payment/<order:$idPattern>/<action>" => 'payment/<action>',          
+                "<customer:$idPattern>/document/<order:$idPattern>" => 'document/index',
+                "<customer:$idPattern>/payment/<order:$idPattern>/<action>/<component:\w+>" => 'payment/<action>',
+                "<customer:$idPattern>/payment/<order:$idPattern>/<action>" => 'payment/<action>',
                 "<customer:$idPattern>/payment/<order:$idPattern>" => 'payment/index',
             ],
         ],
@@ -68,6 +69,17 @@ return [
             'as log' => \yii\queue\LogBehavior::class,
             'attempts' => 1,
         ],
+        'view' => [
+            'renderers' => [
+                'pug' => [
+                    'class' => 'Pug\Yii\ViewRenderer',
+                    'systemVariable' => '_yii',
+                ],
+            ],
+        ],
+        'urlHelper' => [
+            'class' => Url::class,
+        ]
     ],
     'aliases' => [
         //---------------------------------------------------------------------------
@@ -77,6 +89,8 @@ return [
         '@orderTable' => 'order/table',
         '@documents' => 'document/index',
         '@document' => 'document/show',
+        '@payments' => 'payment/index',
+        '@payment' => 'payment/pay',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
         '@files' => __DIR__ . '/../web/uploads',

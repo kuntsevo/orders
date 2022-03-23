@@ -6,7 +6,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 RewriteRule . index.php
 
-
 AddOutputFilterByType DEFLATE text/plain
 AddOutputFilterByType DEFLATE text/html
 AddOutputFilterByType DEFLATE text/xml
