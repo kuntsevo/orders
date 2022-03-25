@@ -101,9 +101,9 @@ class Orders extends ActiveRecord
 	{
 		switch ($this->currentOrderType) {
 			case $this->WORK_ORDER:
-				return $this->actualStatus->status;
+				return $this->actualStatus->alias;
 			default:
-				return $this->status;
+				return $this->alias;
 		}
 	}
 
