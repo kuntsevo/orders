@@ -3,7 +3,7 @@
 namespace frontend\models;
 
 use frontend\traits\DataExtractor;
-use phpDocumentor\Reflection\Types\Null_;
+use Yii;
 use \yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
@@ -79,11 +79,26 @@ class Orders extends ActiveRecord
 		return $this->hasMany(Recommendations::class, ['uid' => 'uid']);
 	}
 
+	public function getStatusHistory()
+	{
+		return $this->hasMany(StatusHistory::class, ['order_id' => 'uid']);
+	}
+
+	public function getActualStatus()
+	{
+		return $this->hasOne(StatusHistory::class, ['order_id' => 'uid'])
+			->where(['is_actual' => 1]);
+	}
+
 	public function getAmountPayable()
 	{
 		return $this->amount - $this->payment_amount;
 	}
 
+	public function getIssuanceDate()
+	{
+		return $this->issuance_date ? Yii::$app->formatter->asDate($this->issuance_date) : '-';
+	}
 	public static function getAllOrdersByCustomer(string $customer_id)
 	{
 		return static::getOrdersByCustomer($customer_id);
@@ -118,10 +133,16 @@ class Orders extends ActiveRecord
 	}
 
 	//---------------------------------------------------------------------------
-	public static function findOrderByUid($uid): Orders
+	public static function findOrderByUid(string $uid, bool $withActualStatus = true): Orders
 	//---------------------------------------------------------------------------
 	{
-		return static::findOne($uid);
+		$order = static::find()->where(['uid' => $uid]);
+
+		if ($withActualStatus) {
+			$order = $order->joinWith('actualStatus');
+		}
+
+		return $order->one();
 	}
 
 	//---------------------------------------------------------------------------
@@ -143,7 +164,7 @@ class Orders extends ActiveRecord
 	{
 		switch ($this->document_type) {
 			case $this->WORK_ORDER:
-				return $this->workOrderAttributeLabels();
+				return self::workOrderAttributeLabels();
 				break;
 			default:
 				return [];
@@ -155,7 +176,7 @@ class Orders extends ActiveRecord
 	 * Для каждого типа документа прописать свои псевдонимы свойств
 	 * Здесь - для заказ-нарядов
 	 */
-	private function workOrderAttributeLabels()
+	private static function workOrderAttributeLabels()
 	{
 		return [
 			'number' => '№ заказ-наряда',

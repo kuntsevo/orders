@@ -91,7 +91,7 @@ use yii\helpers\Url;
                     <?= Html::tag('span', Html::activeLabel($order, 'issuance_date')) ?>
                 </div>
                 <div class="col-md-auto">
-                    <?= Html::encode(Yii::$app->formatter->asDate($order->issuance_date)) ?>
+                    <?= Html::encode(Yii::$app->formatter->asDate($order->IssuanceDate)) ?>
                 </div>
             </div>
 

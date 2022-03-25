@@ -17,7 +17,7 @@ class StatusHistory extends ActiveRecord
 	public static function primaryKey()
 	//---------------------------------------------------------------------------
 	{
-		return ['order_id', 'date'];
+		return ['order_id', 'status'];
 	}
 
 	//---------------------------------------------------------------------------
@@ -27,6 +27,7 @@ class StatusHistory extends ActiveRecord
 		return [
 			[['order_id'], 'string', 'max' => 36],
 			[['date'], 'datetime'],
+			[['status'], 'string', 'max' => 150],
 		];
 	}
 
@@ -37,7 +38,7 @@ class StatusHistory extends ActiveRecord
 		return [
 			'order_id' => 'Идентификатор заказа',
 			'date' => 'Дата изменения статуса',
-			'status' => 'Статус',
+			'alias' => 'Статус',
 		];
 	}
 
@@ -45,7 +46,7 @@ class StatusHistory extends ActiveRecord
 	{
 		return self::find()
 			->where(['order_id' => $order_id])
-			->orderBy('date')
+			->orderBy('date, status_ordering')
 			->all();
 	}
 }

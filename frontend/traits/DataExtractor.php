@@ -2,7 +2,6 @@
 
 namespace frontend\traits;
 
-use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 trait DataExtractor
