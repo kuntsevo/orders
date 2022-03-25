@@ -72,7 +72,7 @@ block content
             each order in orders
               - var vehicle = order.vehicle
               .order__item        
-                .order__item-status #{order.status}
+                .order__item-status #{order.currentStatus}
                 .order__item-id(hidden) #{order.uid}
                 .order__item-title #{vehicle.model}
                 .order__item-row

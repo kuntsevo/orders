@@ -4,6 +4,7 @@ namespace frontend\models;
 
 use frontend\traits\DataExtractor;
 use Yii;
+use yii\db\ActiveQuery;
 use \yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
@@ -12,6 +13,7 @@ class Orders extends ActiveRecord
 	use DataExtractor;
 
 	private $WORK_ORDER = 'ЗаказНаряд';
+	private $currentOrderType;
 
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
@@ -95,26 +97,36 @@ class Orders extends ActiveRecord
 		return $this->amount - $this->payment_amount;
 	}
 
+	public function getCurrentStatus()
+	{
+		switch ($this->currentOrderType) {
+			case $this->WORK_ORDER:
+				return $this->actualStatus->status;
+			default:
+				return $this->status;
+		}
+	}
+
 	public function getIssuanceDate()
 	{
 		return $this->issuance_date ? Yii::$app->formatter->asDate($this->issuance_date) : '-';
 	}
-	public static function getAllOrdersByCustomer(string $customer_id)
+	public static function getAllOrdersByCustomer(string $customer_id, bool $withActualStatus = true)
 	{
 		return static::getOrdersByCustomer($customer_id);
 	}
 
-	public static function getActiveOrdersByCustomer(string $customer_id)
+	public static function getActiveOrdersByCustomer(string $customer_id, bool $withActualStatus = true)
 	{
-		return static::getOrdersByCustomer($customer_id, 0);
+		return static::getOrdersByCustomer($customer_id, 0, $withActualStatus);
 	}
 
-	public static function getArchivedOrdersByCustomer(string $customer_id)
+	public static function getArchivedOrdersByCustomer(string $customer_id, bool $withActualStatus = true)
 	{
-		return static::getOrdersByCustomer($customer_id, 1);
+		return static::getOrdersByCustomer($customer_id, 1, $withActualStatus);
 	}
 
-	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null): array
+	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null, bool $withActualStatus = true): array
 	{
 		$condition = ['customer_id' => $customer_id];
 
@@ -126,10 +138,13 @@ class Orders extends ActiveRecord
 
 		$orders = static::find()
 			->with(['dealer', 'vehicle'])
-			->where($condition)
-			->all();
+			->where($condition);
 
-		return $orders;
+		if ($withActualStatus) {
+			$orders = self::getOrdersWithActualStatus($orders);
+		}
+
+		return $orders->all();
 	}
 
 	//---------------------------------------------------------------------------
@@ -139,10 +154,15 @@ class Orders extends ActiveRecord
 		$order = static::find()->where(['uid' => $uid]);
 
 		if ($withActualStatus) {
-			$order = $order->joinWith('actualStatus');
+			$order = self::getOrdersWithActualStatus($order);
 		}
 
 		return $order->one();
+	}
+
+	private static function getOrdersWithActualStatus(ActiveQuery $order)
+	{
+		return $order->joinWith('actualStatus');
 	}
 
 	//---------------------------------------------------------------------------
@@ -163,7 +183,7 @@ class Orders extends ActiveRecord
 	private function attributeLabelsByDocumentType(): array
 	{
 		switch ($this->document_type) {
-			case $this->WORK_ORDER:
+			case $this->currentOrderType:
 				return self::workOrderAttributeLabels();
 				break;
 			default:
@@ -199,7 +219,7 @@ class Orders extends ActiveRecord
 	public function tableAttributesSequence(string $table_name): array
 	{
 		switch ($this->document_type) {
-			case $this->WORK_ORDER:
+			case $this->currentOrderType:
 				return $this->workOrderTableAttributesSequence($table_name);
 				break;
 			default:
@@ -227,5 +247,12 @@ class Orders extends ActiveRecord
 		];
 
 		return ArrayHelper::getValue($attributesSequence, $table_name, []);
+	}
+
+	public function afterFind()
+	{
+		$this->currentOrderType = $this->document_type;
+
+		return parent::afterFind();
 	}
 }
