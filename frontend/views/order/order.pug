@@ -25,7 +25,7 @@ block content
         .order__top
           .order__top-mobile
             .order__line #{order.getAttributeLabel('repair_kind')}: #[span #{order.repair_kind}]
-            .order__line #{order.getAttributeLabel('issuance_date')}: #[span #{_yii.app.formatter.asDate(order.issuance_date)}]
+            .order__line #{order.getAttributeLabel('issuance_date')}: #[span #{order.IssuanceDate}]
 
           .order__video(hidden)
             <iframe width="560" height="315" src="https://www.youtube.com/embed/7QPqa7gNeIs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -33,7 +33,7 @@ block content
 
           .order__top-pc
             .order__line #{order.getAttributeLabel('repair_kind')}: #[span #{order.repair_kind}]
-            .order__line #{order.getAttributeLabel('issuance_date')}: #[span #{_yii.app.formatter.asDate(order.issuance_date)}]
+            .order__line #{order.getAttributeLabel('issuance_date')}: #[span #{order.IssuanceDate}]
 
           .order__master
             img.order__master-avatar(src=staff.photo)

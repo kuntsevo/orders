@@ -8,14 +8,31 @@ block content
           +icon('back')
         .status__header-top
           .status__title История статусов
-          .status__status В работе
+          .status__status #{order.status}
     .status__content
       .container
         unless status_history
           .status__status История статусов отсутствует
         else
+          - var defaultDate = '3999-11-30 00:00:00.000'
+          - var isFirstFinishedStatusFound = false         
           .status__story
             each statusItem in status_history
-              .status__story-item.is-finished #{statusItem.status}: #[span #{_yii.app.formatter.asDateTime(statusItem.date)}]
+              if !isFirstFinishedStatusFound & statusItem.date == defaultDate
+                - var date = 'Нет данных'
+              else if statusItem.is_finished & statusItem.date == defaultDate & !!order.issuance_date
+                - var date = order.IssuanceDate
+              else if isFirstFinishedStatusFound & statusItem.date == defaultDate
+                - var date = '-'                            
+              else
+                - var date = _yii.app.formatter.asDateTime(statusItem.date)
+
+              if !isFirstFinishedStatusFound & statusItem.date != defaultDate
+                - isFirstFinishedStatusFound = true
+
+              if statusItem.date !== defaultDate | statusItem.is_actual
+                .status__story-item.is-finished #{statusItem.alias}: #[span #{date}]                                                                
+              else
+                .status__story-item #{statusItem.alias}: #[span #{date}]
 
 block footer
