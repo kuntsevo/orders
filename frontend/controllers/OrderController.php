@@ -73,7 +73,8 @@ class OrderController extends Controller
 			$this->redirect($this->baseUrlRedirect);
 		//throw new NotFoundHttpException('404');
 
-		$customer_orders = Orders::getActiveOrdersByCustomer($customer_id);
+		$active_orders = Orders::getActiveOrdersByCustomer($customer_id);
+		$finished_orders = Orders::getArchivedOrdersByCustomer($customer_id);
 		$customer = Customers::findCustomer($customer_id);
 		//если не найден
 		//if (is_null($order))
@@ -88,10 +89,11 @@ class OrderController extends Controller
 
 		$this->view->title = 'История обслуживания';
 
-		return $this->render('index.pug', [
-			'orders' => $customer_orders,
-			'customer' => $customer,
-		]);
+		return $this->render('index.pug', compact(
+			'active_orders',
+			'finished_orders',
+			'customer'
+		));
 	}
 
 	public function actionShow()

@@ -86,11 +86,10 @@ class Orders extends ActiveRecord
 		return $this->hasMany(StatusHistory::class, ['order_id' => 'uid']);
 	}
 
-	private function getActualStatusFromHistory()
+	public function getActualStatusFromHistory()
 	{
 		return $this->hasOne(StatusHistory::class, ['order_id' => 'uid'])
-			->where(['is_actual' => 1])
-			->one();
+			->where(['is_actual' => 1]);
 	}
 
 	public function getAmountPayable()
@@ -102,7 +101,7 @@ class Orders extends ActiveRecord
 	{
 		switch (self::$currentOrderType) {
 			case self::$WORK_ORDER:
-				return $this->getActualStatusFromHistory()->alias;
+				return $this->getActualStatusFromHistory()->one()->alias;
 			default:
 				return $this->alias;
 		}
@@ -159,7 +158,7 @@ class Orders extends ActiveRecord
 
 	private static function getOrdersWithActualStatus(ActiveQuery $order)
 	{
-		return $order->joinWith('actualStatus');
+		return $order->joinWith('actualStatusFromHistory');
 	}
 
 	private static function addActualStatus($order)
