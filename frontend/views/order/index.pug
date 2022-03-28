@@ -58,37 +58,19 @@ block content
                   span.toolbar__link-text.red Выйти из аккаунта
     .homepage__content
       .container
+        - var activeState = 'active'
+        - var finishedState = 'finished'
         .homepage__top
           .homepage__filter
-            button.homepage__filter-btn.is-active(type="button") Активные
-            button.homepage__filter-btn(type="button") Завершенные
+            button.homepage__filter-btn.is-active(type="button" data-order-state=activeState) Активные
+            button.homepage__filter-btn(type="button" data-order-state=finishedState) Завершенные
           .homepage__alert(hidden)
             .homepage__alert-icon !
             | По техническим причинам, работы приостановлены
-        .order__list
-          unless orders
-            .order__item Нет документов в работе
-          else
-            each order in orders
-              - var vehicle = order.vehicle
-              .order__item        
-                .order__item-status #{order.currentStatus}
-                .order__item-id(hidden) #{order.uid}
-                .order__item-title #{vehicle.model}
-                .order__item-row
-                  .order__item-address
-                    svg(width="9" height="11" viewBox="0 0 9 11" fill="none" xmlns="http://www.w3.org/2000/svg")
-                      path( d="M1.09091 3.98779C1.89091 0.527792 7.13091 0.527792 7.93091 3.98779C8.40091 6.01779 7.11091 7.73779 5.98091 8.80779C4.90079 9.88791 4.021 9.7878 3.201 9.0178C2.071 7.9478 0.62091 6.01779 1.09091 3.98779Z" stroke="#0B132B" stroke-width="1.5")
-                      path( d="M4.50721 4.88791H4.51877" stroke="#0B132B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
-                    | #{order.dealer.name}
-                  .order__item-number #{vehicle.registration_number}
-                hr
-                ul.order__item-info
-                  li #{order.getAttributeLabel('repair_kind')}: #[span #{order.repair_kind}]
-                  li #{order.getAttributeLabel('issuance_date')}: #[span #{order.IssuanceDate}]
-                  li.sum #{order.getAttributeLabel('amount_payable')}: #[span #{_yii.app.formatter.asCurrency(order.amountPayable)}]
-                a.btn(href=_yii.app.urlHelper.to({0: '@payments', 'customer': customer.uid, 'order': order.uid})) Оплатить
-                a.btn.btn-link(href=_yii.app.urlHelper.to({0: '@orderItem', 'customer': customer.uid, 'order': order.uid})) Подробнее
+        .order__list(id=activeState)
+          +order-list(activeState)
+        .order__list(id=finishedState hidden)
+          +order-list(finishedState)               
 
         a.order__promo(href="promo.html") 20% скидка #[br]на малярные работы #[br]в феврале
 block footer

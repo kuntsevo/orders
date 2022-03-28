@@ -12,8 +12,8 @@ class Orders extends ActiveRecord
 {
 	use DataExtractor;
 
-	private $WORK_ORDER = 'ЗаказНаряд';
-	private $currentOrderType;
+	private static $WORK_ORDER = 'ЗаказНаряд';
+	private static $currentOrderType;
 
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
@@ -86,7 +86,7 @@ class Orders extends ActiveRecord
 		return $this->hasMany(StatusHistory::class, ['order_id' => 'uid']);
 	}
 
-	public function getActualStatus()
+	public function getActualStatusFromHistory()
 	{
 		return $this->hasOne(StatusHistory::class, ['order_id' => 'uid'])
 			->where(['is_actual' => 1]);
@@ -97,11 +97,11 @@ class Orders extends ActiveRecord
 		return $this->amount - $this->payment_amount;
 	}
 
-	public function getCurrentStatus()
+	public function getActualStatus()
 	{
-		switch ($this->currentOrderType) {
-			case $this->WORK_ORDER:
-				return $this->actualStatus->alias;
+		switch (self::$currentOrderType) {
+			case self::$WORK_ORDER:
+				return $this->getActualStatusFromHistory()->one()->alias;
 			default:
 				return $this->alias;
 		}
@@ -111,22 +111,22 @@ class Orders extends ActiveRecord
 	{
 		return $this->issuance_date ? Yii::$app->formatter->asDate($this->issuance_date) : '-';
 	}
-	public static function getAllOrdersByCustomer(string $customer_id, bool $withActualStatus = true)
+	public static function getAllOrdersByCustomer(string $customer_id)
 	{
 		return static::getOrdersByCustomer($customer_id);
 	}
 
-	public static function getActiveOrdersByCustomer(string $customer_id, bool $withActualStatus = true)
+	public static function getActiveOrdersByCustomer(string $customer_id)
 	{
-		return static::getOrdersByCustomer($customer_id, 0, $withActualStatus);
+		return static::getOrdersByCustomer($customer_id, 0);
 	}
 
-	public static function getArchivedOrdersByCustomer(string $customer_id, bool $withActualStatus = true)
+	public static function getArchivedOrdersByCustomer(string $customer_id)
 	{
-		return static::getOrdersByCustomer($customer_id, 1, $withActualStatus);
+		return static::getOrdersByCustomer($customer_id, 1);
 	}
 
-	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null, bool $withActualStatus = true): array
+	private static function getOrdersByCustomer(string $customer_id, int $is_archived = null): array
 	{
 		$condition = ['customer_id' => $customer_id];
 
@@ -140,29 +140,36 @@ class Orders extends ActiveRecord
 			->with(['dealer', 'vehicle'])
 			->where($condition);
 
-		if ($withActualStatus) {
-			$orders = self::getOrdersWithActualStatus($orders);
-		}
+		$orders = self::addActualStatus($orders);
 
 		return $orders->all();
 	}
 
 	//---------------------------------------------------------------------------
-	public static function findOrderByUid(string $uid, bool $withActualStatus = true): Orders
+	public static function findOrderByUid(string $uid): Orders
 	//---------------------------------------------------------------------------
 	{
 		$order = static::find()->where(['uid' => $uid]);
 
-		if ($withActualStatus) {
-			$order = self::getOrdersWithActualStatus($order);
-		}
+		$order = self::addActualStatus($order);
 
 		return $order->one();
 	}
 
 	private static function getOrdersWithActualStatus(ActiveQuery $order)
 	{
-		return $order->joinWith('actualStatus');
+		return $order->joinWith('actualStatusFromHistory');
+	}
+
+	private static function addActualStatus($order)
+	{
+		$withActualStatus = self::$currentOrderType === self::$WORK_ORDER;
+
+		if ($withActualStatus) {
+			$order = self::getOrdersWithActualStatus($order);
+		}
+
+		return $order;
 	}
 
 	//---------------------------------------------------------------------------
@@ -183,7 +190,7 @@ class Orders extends ActiveRecord
 	private function attributeLabelsByDocumentType(): array
 	{
 		switch ($this->document_type) {
-			case $this->currentOrderType:
+			case self::$currentOrderType:
 				return self::workOrderAttributeLabels();
 				break;
 			default:
@@ -219,7 +226,7 @@ class Orders extends ActiveRecord
 	public function tableAttributesSequence(string $table_name): array
 	{
 		switch ($this->document_type) {
-			case $this->currentOrderType:
+			case self::$currentOrderType:
 				return $this->workOrderTableAttributesSequence($table_name);
 				break;
 			default:
@@ -251,7 +258,7 @@ class Orders extends ActiveRecord
 
 	public function afterFind()
 	{
-		$this->currentOrderType = $this->document_type;
+		self::$currentOrderType = $this->document_type;
 
 		return parent::afterFind();
 	}
