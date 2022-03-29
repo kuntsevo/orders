@@ -2,11 +2,10 @@
 
 namespace common\components;
 
-use frontend\models\Bases;
-use PHPUnit\Util\Log\JSON;
 use Yii;
 use yii\base\Component;
-use yii\helpers\Json as HelpersJson;
+use yii\helpers\Json;
+use frontend\models\Bases;
 use yii\web\ServerErrorHttpException;
 
 class Ext1c extends Component
@@ -69,19 +68,19 @@ class Ext1c extends Component
 	public function getJSON(string $base_id, array $config = [], bool $asArray = true)
 	{
 		$result = $this->httpService1CRequest($base_id, $config);
-		return HelpersJson::decode($result, $asArray);
+		return Json::decode($result, $asArray);
 	}
 
 	public function putJSON(string $base_id, array $body = [], bool $asArray = true)
 	{
-		$body_json = HelpersJson::encode($body);
+		$body_json = Json::encode($body);
 		$this->options = [
 			CURLOPT_CUSTOMREQUEST => 'PUT',
 			CURLOPT_POSTFIELDS => $body_json,
 		];
 
 		$result = $this->httpService1CRequest($base_id);
-		return HelpersJson::decode($result, $asArray);
+		return Json::decode($result, $asArray);
 	}
 
 	public function downloadFile(string $base_id, array $config = [])

@@ -31,9 +31,7 @@ block content
                 - isFirstFinishedStatusFound = true
 
               - var statusText = `${statusItem.alias}: <span>${date}</span>`
-              if statusItem.date !== dateByDefault | statusItem.is_actual
-                .status__story-item.is-finished !{statusText}
-              else
-                .status__story-item !{statusText}
+              - var isFinished = statusItem.date !== dateByDefault | statusItem.is_actual
+              .status__story-item(class=isFinished ? 'is-finished' : '') !{statusText}
 
 block footer

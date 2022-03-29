@@ -35,43 +35,45 @@ block content
           .homepage__welcome Добрый день, #{client_name}
           .request(hidden)           
             button.request__btn.js-request(type="button")
-              img.request__icon(src='../img/plus.svg' alt="")
+              img.request__icon(src=_yii.app.urlHelper.to('@web/img/plus.svg') alt="")
               | Записаться на сервис
             .request__confirmed
-              img.request__icon(src='../img/check.svg' alt="")
+              img.request__icon(src=_yii.app.urlHelper.to('@web/img/check.svg') alt="")
               div
                 .request__title Мы приняли вашу заявку, #[br]#{customer.first_name}!
                 .request__text Наш менеджер свяжется с&nbsp;вами по&nbsp;телефону +7(957)1234567
               button.request__close(type="button")
-                img(src='../img/close.svg' alt="")
+                img(src=_yii.app.urlHelper.to('@web/img/close.svg') alt="")
           .toolbar(hidden)
             button.toolbar__toggle(type="button")
-              img.img(src='../img/bar.svg' alt="")
+              img.img(src=_yii.app.urlHelper.to('@web/img/bar.svg') alt="")
             ul.toolbar__menu
               li.toolbar__item
                 a.toolbar__link.js-request(href="#")
-                  img.toolbar__link-icon(src='../img/phone.svg' alt="")
+                  img.toolbar__link-icon(src=_yii.app.urlHelper.to('@web/img/phone.svg') alt="")
                   span.toolbar__link-text Заказать звонок
               li.toolbar__item
                 a.toolbar__link.js-logout(href="#")
-                  img.toolbar__link-icon(src='../img/logout.svg' alt="")
+                  img.toolbar__link-icon(src=_yii.app.urlHelper.to('@web/img/logout.svg') alt="")
                   span.toolbar__link-text.red Выйти из аккаунта
     .homepage__content
       .container
-        - var activeState = 'active'
-        - var finishedState = 'finished'
+        -
+          var orderFilters = [
+            {id: 'active', alias: 'Активные', default: true},
+            {id: 'finished', alias: 'Завершенные', default: false}
+          ]
         .homepage__top
           .homepage__filter
-            button.homepage__filter-btn.is-active(type="button" data-order-state=activeState) Активные
-            button.homepage__filter-btn(type="button" data-order-state=finishedState) Завершенные
+            each filter in orderFilters
+              button.homepage__filter-btn(class=filter.default ? 'is-active' : '' type="button" data-order-state=filter.id) #{filter.alias}
           .homepage__alert(hidden)
             .homepage__alert-icon !
             | По техническим причинам, работы приостановлены
-        .order__list(id=activeState)
-          +order-list(activeState)
-        .order__list(id=finishedState hidden)
-          +order-list(finishedState)               
+        each filter in orderFilters
+          .order__list(id=filter.id hidden=!filter.default)
+            +order-list(filter.id)             
 
-        a.order__promo(href="promo.html") 20% скидка #[br]на малярные работы #[br]в феврале
+        a.order__promo(href="#") 20% скидка #[br]на малярные работы #[br]в феврале
 block footer
 
