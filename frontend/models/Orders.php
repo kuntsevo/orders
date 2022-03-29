@@ -69,10 +69,7 @@ class Orders extends ActiveRecord
 	{
 		// TODO
 		// обработать ситуацию, когда нет StaffInfo
-		return $this->hasOne(
-			StaffInfo::class,
-			['base_id' => 'base_id']
-		)
+		return $this->hasOne(StaffInfo::class, ['base_id' => 'base_id'])
 			->where(['employee_id' => $this->staff->employee_id]);
 	}
 
@@ -86,10 +83,14 @@ class Orders extends ActiveRecord
 		return $this->hasMany(StatusHistory::class, ['order_id' => 'uid']);
 	}
 
+	public function getOneStatusFromHistory()
+	{
+		return $this->hasOne(StatusHistory::class, ['order_id' => 'uid']);
+	}
+
 	public function getActualStatusFromHistory()
 	{
-		return $this->hasOne(StatusHistory::class, ['order_id' => 'uid'])
-			->where(['is_actual' => 1]);
+		return $this->getOneStatusFromHistory()->where(['is_actual' => 1]);
 	}
 
 	public function getAmountPayable()
@@ -101,7 +102,7 @@ class Orders extends ActiveRecord
 	{
 		switch (self::$currentOrderType) {
 			case self::$WORK_ORDER:
-				return $this->getActualStatusFromHistory()->one()->alias;
+				return $this->actualStatusFromHistory->alias;
 			default:
 				return $this->alias;
 		}
@@ -109,7 +110,7 @@ class Orders extends ActiveRecord
 
 	public function getIssuanceDate()
 	{
-		return $this->issuance_date ? Yii::$app->formatter->asDate($this->issuance_date) : '-';
+		return $this->issuance_date ? Yii::$app->formatter->asDateTime($this->issuance_date) : '-';
 	}
 	public static function getAllOrdersByCustomer(string $customer_id)
 	{
@@ -139,8 +140,7 @@ class Orders extends ActiveRecord
 		$orders = static::find()
 			->with(['dealer', 'vehicle'])
 			->where($condition);
-
-		$orders = self::addActualStatus($orders);
+		$orders  = self::addActualStatus($orders);
 
 		return $orders->all();
 	}
@@ -156,20 +156,13 @@ class Orders extends ActiveRecord
 		return $order->one();
 	}
 
-	private static function getOrdersWithActualStatus(ActiveQuery $order)
-	{
-		return $order->joinWith('actualStatusFromHistory');
-	}
-
 	private static function addActualStatus($order)
 	{
-		$withActualStatus = self::$currentOrderType === self::$WORK_ORDER;
-
-		if ($withActualStatus) {
-			$order = self::getOrdersWithActualStatus($order);
-		}
-
-		return $order;
+		return $order->joinWith([
+			'oneStatusFromHistory' => function ($query) {
+				$query->onCondition(['is_actual' => 1]);
+			},
+		]);
 	}
 
 	//---------------------------------------------------------------------------

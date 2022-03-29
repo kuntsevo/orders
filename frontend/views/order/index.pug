@@ -58,19 +58,21 @@ block content
                   span.toolbar__link-text.red Выйти из аккаунта
     .homepage__content
       .container
-        - var activeState = 'active'
-        - var finishedState = 'finished'
+        -
+          var orderFilters = [
+            {id: 'active', alias: 'Активные', default: true},
+            {id: 'finished', alias: 'Завершенные', default: false}
+          ]
         .homepage__top
           .homepage__filter
-            button.homepage__filter-btn.is-active(type="button" data-order-state=activeState) Активные
-            button.homepage__filter-btn(type="button" data-order-state=finishedState) Завершенные
+            each filter in orderFilters
+              button.homepage__filter-btn(class=filter.default ? 'is-active' : '' type="button" data-order-state=filter.id) #{filter.alias}
           .homepage__alert(hidden)
             .homepage__alert-icon !
             | По техническим причинам, работы приостановлены
-        .order__list(id=activeState)
-          +order-list(activeState)
-        .order__list(id=finishedState hidden)
-          +order-list(finishedState)               
+        each filter in orderFilters
+          .order__list(id=filter.id hidden=!filter.default)
+            +order-list(filter.id)             
 
         a.order__promo(href="promo.html") 20% скидка #[br]на малярные работы #[br]в феврале
 block footer
