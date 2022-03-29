@@ -213,13 +213,14 @@ class Orders extends ActiveRecord
 			'amount_payable' => 'Сумма к оплате',
 			'works' => 'Работы',
 			'goods' => 'Товары',
+			'recommendations' => 'Рекомендации',
 		];
 	}
 
 	public function tableAttributesSequence(string $table_name): array
 	{
 		switch ($this->document_type) {
-			case self::$currentOrderType:
+			case self::$WORK_ORDER:
 				return $this->workOrderTableAttributesSequence($table_name);
 				break;
 			default:

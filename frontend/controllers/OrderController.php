@@ -120,7 +120,8 @@ class OrderController extends Controller
 		$order = Orders::findOrderByUid($order_id);
 		$tableAttributes = $order->tableAttributesSequence($table_name);
 
-		return $this->render('orderTable', compact(['order', 'table_name', 'tableAttributes']));
+		return $this->render('table.pug', compact(['order', 'table_name', 'tableAttributes']));
+		// return $this->render('orderTable', compact(['order', 'table_name', 'tableAttributes']));
 	}
 
 	public function actionStatusHistory()
