@@ -88,7 +88,7 @@ class OrderController extends Controller
 		// ]));
 
 		$this->view->title = 'История обслуживания';
-
+		
 		return $this->render('index.pug', compact(
 			'active_orders',
 			'finished_orders',

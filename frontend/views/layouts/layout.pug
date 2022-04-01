@@ -27,7 +27,10 @@ html(lang='ru')
 
   include ../components/mixins/page-wrapper
   include ../components/mixins/order-list
+  include ../components/mixins/long-operation-modal
 
   block head
     block content
+    block modal
+      +long-operation-modal()
     block footer

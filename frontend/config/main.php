@@ -94,7 +94,8 @@ return [
         '@payment' => 'payment/pay',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
-        '@files' => __DIR__ . '/../web/uploads',
+        '@files' => '/uploads',
+        // '@files' => __DIR__ . '/../web/uploads',
     ],
     'params' => $params,
 ];
