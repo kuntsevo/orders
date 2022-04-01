@@ -45,6 +45,7 @@ phpunit.phar
 
 /frontend/web/uploads/*
 !/frontend/web/uploads/.keep
+!/frontend/web/uploads/*.pdf
 
 
 

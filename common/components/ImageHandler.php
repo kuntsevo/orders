@@ -49,7 +49,7 @@ class ImageHandler extends BaseObject
 				$imageCreate = 'imageCreateFromJpeg';
 				break;
 			case IMG_PNG:
-				$imageCreate = 'imagecreatefrompng';
+				$imageCreate = 'imageCreateFromPng';
 				break;
 			default:
 				// TODO ошибка

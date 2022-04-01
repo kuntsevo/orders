@@ -1,9 +1,30 @@
+function getDocument(url, fileName) {
+  const modalHandler = new LongOperationModalWindow();
+  modalHandler.open();
+
+  $.ajax({
+    url: url,
+  })
+    .done(function (path) {
+      let link = document.createElement("a");
+      link.href = path;
+      link.download = fileName;
+      link.click();
+    })
+    .fail(function (err) {
+      // TODO
+      console.error(err);
+    })
+    .always(() => modalHandler.close());
+}
+
 async function getInternetAcquiringUrl(currentElement) {
   const url = currentElement.dataset.url;
-  //   const elem = document.getElementById('spinner_' + currentElement.id);
-  const spinnerElem = "spinner-border";
-  //   elem.classList.toggle(spinnerElem);
+  const modalHandler = new LongOperationModalWindow();
+  modalHandler.open();
+
   let response = await fetch(url);
+
   if (response.ok) {
     let json = await response.json();
     if (json.url) {
@@ -11,9 +32,31 @@ async function getInternetAcquiringUrl(currentElement) {
     } else {
       location.reload();
     }
-    // elem.classList.toggle(spinnerElem);
   } else {
     console.error("Ошибка HTTP: " + response.status);
+  }
+
+  modalHandler.close();
+}
+
+class LongOperationModalWindow {
+  elementId = "#longOperationModal";
+  element;
+
+  constructor() {
+    this.element = $(this.elementId).modal({
+      backdrop: true,
+      keyboard: false,
+      show: false,
+    });
+  }
+
+  open() {
+    this.element.modal("show");
+  }
+
+  close() {
+    this.element.modal("hide");
   }
 }
 
@@ -44,6 +87,15 @@ homepageFilterBtns.forEach((elem) => {
       orderItem.setAttribute("hidden", "");
     });
 
-    targetOrderList.removeAttribute('hidden');
+    targetOrderList.removeAttribute("hidden");
   });
 });
+
+function openModalWindow(text = "") {
+  $("#modalWindow").modal(options);
+  // let myModal = new bootstrap.Modal(document.getElementById("modalWindow"), {
+  //   text: text,
+  // });
+
+  console.log(myModal);
+}

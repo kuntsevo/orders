@@ -1,0 +1,14 @@
+mixin long-operation-modal(message='Пожалуйста, подождите. Операция выполняется...' title='' dismissText='Отмена')
+    #longOperationModal(class='modal' data-keyboard="false" tabindex="-1" aria-labelledby="longOperationModalLabel" aria-hidden="true")&attributes(attributes)
+        .modal-dialog.modal-dialog-centered
+            .modal-content                
+                .modal-header
+                    if title
+                        h5#longOperationModalLabel.modal-title= title
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") &times;                
+                .clearfix
+                    .spinner-border.text-primary.float-left.m-5(style="width: 3rem; height: 3rem;" role="status")
+                    .modal-body= message
+                .modal-footer
+                    .btn(data-dismiss="modal" type="button")= dismissText

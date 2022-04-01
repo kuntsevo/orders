@@ -15,6 +15,11 @@ block content
         else
           each label, document_key in document_list
             li
-              a.docs__list-item(href=_yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})) #{label}
+              - var url = _yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})
+              - var fileName = `${order.number} ${document_key}.pdf`
+              btn.docs__list-item(type="button" onClick=`getDocument('${url}', '${fileName}')`) #{label}
+              //- btn.docs__list-item(href=_yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})) #{label}
 
+block modal
+  +long-operation-modal('Пожалуйста подождите. Получаем документ...')
 block footer

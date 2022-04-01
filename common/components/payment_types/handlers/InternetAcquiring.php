@@ -3,7 +3,6 @@
 namespace common\components\payment_types\handlers;
 
 use common\components\Ext1c;
-use common\components\Payment;
 use common\interfaces\IPayment;
 use frontend\models\Orders;
 use Yii;
@@ -12,8 +11,6 @@ use yii\web\Controller;
 class InternetAcquiring implements IPayment
 {
     const PAYMENT_TYPE = 'internet_acquiring';
-
-    private $controller;
 
     public function __construct(Controller $controller)
     {
