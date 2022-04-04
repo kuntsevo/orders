@@ -7,6 +7,7 @@ use Yii;
 use yii\db\ActiveQuery;
 use \yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\web\ServerErrorHttpException;
 
 class Orders extends ActiveRecord
 {
@@ -67,8 +68,6 @@ class Orders extends ActiveRecord
 
 	public function getStaffInfo()
 	{
-		// TODO
-		// обработать ситуацию, когда нет StaffInfo
 		return $this->hasOne(StaffInfo::class, ['base_id' => 'base_id'])
 			->where(['employee_id' => $this->staff->employee_id]);
 	}
@@ -140,9 +139,14 @@ class Orders extends ActiveRecord
 		$orders = static::find()
 			->with(['dealer', 'vehicle'])
 			->where($condition);
-		$orders  = self::addActualStatus($orders);
+		$orders = self::addActualStatus($orders);
 
-		return $orders->all();
+		$orders = $orders->all();
+
+		if (is_null($orders))
+			throw new ServerErrorHttpException("Не удалось получить заказы клиента {$customer_id}, архивные - {$is_archived}.");
+
+		return $orders;
 	}
 
 	//---------------------------------------------------------------------------
@@ -153,7 +157,12 @@ class Orders extends ActiveRecord
 
 		$order = self::addActualStatus($order);
 
-		return $order->one();
+		$order = $order->one();
+
+		if (!$order)
+			throw new ServerErrorHttpException("Не удалось найти заказ {$uid}.");
+
+		return $order;
 	}
 
 	private static function addActualStatus($order)

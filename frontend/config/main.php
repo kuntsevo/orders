@@ -1,5 +1,6 @@
 <?php
 
+use common\components\SessionHandler;
 use yii\helpers\Url;
 use yii\web\UrlNormalizer;
 
@@ -29,14 +30,15 @@ return [
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
-            'name' => 'advanced-frontend',
+            'name' => 'kuntsevo-orders',
+            'timeout' => 86400 * 7,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning', 'info', 'trace'],
+                    'levels' => YII_DEBUG ? ['error', 'warning', 'info', 'trace'] : ['error', 'warning'],
                 ],
             ],
         ],
@@ -52,6 +54,7 @@ return [
                 'action' => UrlNormalizer::ACTION_REDIRECT_TEMPORARY,
             ],
             'rules' => [
+                "order/error" => 'order/error',
                 "<customer:$idPattern>/order/<order:$idPattern>/<action>/<component:\w+>" => 'order/<action>',
                 "<customer:$idPattern>/order/<order:$idPattern>/<action>" => 'order/<action>',
                 "<customer:$idPattern>/order/<order:$idPattern>" => 'order/show',
@@ -79,7 +82,10 @@ return [
         ],
         'urlHelper' => [
             'class' => Url::class,
-        ]
+        ],
+        'sessionHandler' => [
+            'class' => SessionHandler::class,
+        ],
     ],
     'aliases' => [
         //---------------------------------------------------------------------------
@@ -95,7 +101,6 @@ return [
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
         '@files' => '/uploads',
-        // '@files' => __DIR__ . '/../web/uploads',
     ],
     'params' => $params,
 ];

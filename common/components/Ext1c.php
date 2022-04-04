@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Component;
 use yii\helpers\Json;
 use frontend\models\Bases;
+use yii\base\ErrorException;
 use yii\web\ServerErrorHttpException;
 
 class Ext1c extends Component
@@ -31,10 +32,9 @@ class Ext1c extends Component
 	public function init()
 	//---------------------------------------------------------------------------
 	{
-		// if (!function_exists ('curl_init'))
-		// {
-		// throw new CException('Для работы расширения требуется cURL');
-		// }
+		if (!function_exists('curl_init')) {
+			throw new ServerErrorHttpException('Для работы расширения требуется cURL.');
+		}
 		parent::init();
 
 		$this->http_1c_usr = Yii::$app->params['http_1c_usr'];
@@ -101,10 +101,6 @@ class Ext1c extends Component
 	{
 		$base = (new Bases())::findOne($base_id);
 
-		if (is_null($base)) {
-			throw new ServerErrorHttpException("Не найдена база 1С по идентификтору");
-		}
-
 		return $base->hs;
 	}
 
@@ -121,8 +117,11 @@ class Ext1c extends Component
 
 		curl_setopt_array($curl, $options + $default_options);
 
-		$result = curl_exec($curl);
-		$info = curl_getinfo($curl);
+		try {
+			$result = curl_exec($curl);
+		} catch (ErrorException $e) {
+			throw new ServerErrorHttpException($e->getName());
+		}
 
 		curl_close($curl);
 

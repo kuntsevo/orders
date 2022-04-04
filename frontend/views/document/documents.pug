@@ -1,7 +1,7 @@
 extends ../layouts/layout
 
 block content
-  +page-wrapper('docs__page')
+  +page-wrapper('docs__page')    
     - var customer = order.customer;
     .docs__header
       .container
@@ -9,6 +9,7 @@ block content
           +icon('back')
         h1.page-title Документы
     .container
+      +warning()
       ul.docs__list
         unless document_list
           docs__list-item Нет доступных документов
@@ -18,7 +19,6 @@ block content
               - var url = _yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})
               - var fileName = `${order.number} ${document_key}.pdf`
               btn.docs__list-item(type="button" onClick=`getDocument('${url}', '${fileName}')`) #{label}
-              //- btn.docs__list-item(href=_yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})) #{label}
 
 block modal
   +long-operation-modal('Пожалуйста подождите. Получаем документ...')

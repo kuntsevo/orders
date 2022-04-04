@@ -11,6 +11,7 @@ block content
           .status__status #{order.actualStatus}
     .status__content
       .container
+        +warning()
         unless status_history
           .status__status История статусов отсутствует
         else

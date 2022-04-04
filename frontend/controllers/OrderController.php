@@ -8,6 +8,9 @@ use yii\filters\AccessControl;
 use frontend\models\Orders;
 use frontend\models\Customers;
 use frontend\models\StatusHistory;
+use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * Order controller
@@ -29,7 +32,7 @@ class OrderController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'index', 'show', 'table', 'status-history'],
+						'actions' => ['test', 'error', 'index', 'show', 'table', 'status-history'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -44,6 +47,7 @@ class OrderController extends Controller
 	{
 		return [
 			'test' => ['GET'],
+			'error' => ['GET'],
 			'index' => ['GET'],
 			'show' => ['GET'],
 			'table' => ['GET'],
@@ -62,33 +66,21 @@ class OrderController extends Controller
 	public function actionIndex()
 	//---------------------------------------------------------------------------
 	{
-		//пока пусть будет общее
-		//if (is_null($this->referer))
-		//	$this->redirect($this->baseUrlRedirect);
-
-		// $uid = Yii::$app->request->get('uid', '');
 		$customer_id = Yii::$app->request->get('customer');
 
-		if (is_null($customer_id))
-			$this->redirect($this->baseUrlRedirect);
-		//throw new NotFoundHttpException('404');
+		if (!$customer_id)
+			throw new UnauthorizedHttpException('В запросе отсутствует параметр "customer".');
+
+		$customer = Customers::findCustomer($customer_id);
+
+		$session = Yii::$app->session;
+		$session->set('customer_id', $customer_id);
 
 		$active_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$finished_orders = Orders::getArchivedOrdersByCustomer($customer_id);
-		$customer = Customers::findCustomer($customer_id);
-		//если не найден
-		//if (is_null($order))
-		//	return $this->redirect(['error']);
-
-
-		//какое то действие отправки в 1с
-		// Yii::$app->queue->push(new SendTo1CJob([
-		// 'id' => $request_data['id'],
-		// 'hs' => $base['hs']
-		// ]));
 
 		$this->view->title = 'История обслуживания';
-		
+
 		return $this->render('index.pug', compact(
 			'active_orders',
 			'finished_orders',
@@ -100,11 +92,11 @@ class OrderController extends Controller
 	{
 		$order_id = Yii::$app->request->get('order');
 		if (is_null($order_id))
-			$this->redirect($this->baseUrlRedirect);
+			throw new NotFoundHttpException('В запросе отсутствует параметр "order".');
 
 		$order = Orders::findOrderByUid($order_id);
 
-		$this->view->title = "№$order->number";
+		$this->view->title = "№{$order->number}";
 
 		return $this->render('order.pug', compact('order'));
 	}
@@ -115,13 +107,13 @@ class OrderController extends Controller
 		$table_name = Yii::$app->request->get('component');
 
 		if (is_null($order_id) || is_null($table_name))
-			$this->redirect($this->baseUrlRedirect);
+			throw new ServerErrorHttpException('В запросе отсутствует параметр "order" или "component".');
 
 		$order = Orders::findOrderByUid($order_id);
+
 		$tableAttributes = $order->tableAttributesSequence($table_name);
 
 		return $this->render('table.pug', compact(['order', 'table_name', 'tableAttributes']));
-		// return $this->render('orderTable', compact(['order', 'table_name', 'tableAttributes']));
 	}
 
 	public function actionStatusHistory()
@@ -129,9 +121,10 @@ class OrderController extends Controller
 
 		$order_id = Yii::$app->request->get('order');
 		if (is_null($order_id))
-			$this->redirect($this->baseUrlRedirect);
+			throw new NotFoundHttpException('В запросе отсутствует параметр "order".');
 
 		$order = Orders::findOrderByUid($order_id);
+
 		$status_history = StatusHistory::getOrderStatusHistory($order_id);
 
 		return $this->render('status.pug', compact('status_history', 'order'));
@@ -219,5 +212,21 @@ class OrderController extends Controller
 		// $method_log->save(false);
 
 		return $result;
+	}
+
+	public function actionError()
+	{
+		$exception = Yii::$app->errorHandler->exception;
+		if (!$exception) {
+			return $this->redirect($this->_baseurl_redirect);
+		}
+
+		if ($exception->statusCode === 401) {
+			$customer_id = null;
+		} else {
+			$customer_id = Yii::$app->sessionHandler->getCustomerId();
+		}
+
+		return $this->render('//errorHandler/error.pug', compact('exception', 'customer_id'));
 	}
 }

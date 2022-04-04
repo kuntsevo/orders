@@ -13,7 +13,6 @@ function getDocument(url, fileName) {
     })
     .fail(function (err) {
       // TODO
-      console.error(err);
     })
     .always(() => modalHandler.close());
 }

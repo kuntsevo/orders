@@ -57,7 +57,7 @@ block content
                   img.toolbar__link-icon(src=_yii.app.urlHelper.to('@web/img/logout.svg') alt="")
                   span.toolbar__link-text.red Выйти из аккаунта
     .homepage__content
-      .container
+      .container        
         -
           var orderFilters = [
             {id: 'active', alias: 'Активные', default: true},
@@ -70,6 +70,7 @@ block content
           .homepage__alert(hidden)
             .homepage__alert-icon !
             | По техническим причинам, работы приостановлены
+        +warning()      
         each filter in orderFilters
           .order__list(id=filter.id hidden=!filter.default)
             +order-list(filter.id)             

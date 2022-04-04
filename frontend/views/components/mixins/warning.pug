@@ -1,0 +1,4 @@
+mixin warning()
+    - var warning = _yii.app.sessionHandler.getWarning()
+    if warning
+        .alert.alert-warning(role='alert')= warning

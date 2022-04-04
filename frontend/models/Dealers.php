@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use \yii\db\ActiveRecord;
+use yii\web\ServerErrorHttpException;
 
 class Dealers extends ActiveRecord
 {
@@ -14,51 +15,52 @@ class Dealers extends ActiveRecord
 	}
 
 	//---------------------------------------------------------------------------
-    public static function primaryKey()
+	public static function primaryKey()
 	//---------------------------------------------------------------------------
-    {
-        return ['uid'];
-    }
+	{
+		return ['uid'];
+	}
 
 	//---------------------------------------------------------------------------
-    public function rules()
+	public function rules()
 	//---------------------------------------------------------------------------
-    {
-        return [
+	{
+		return [
 			[['uid'], 'string', 'max' => 36],
-			[['name'], 'string', 'max' => 150],        
-        ];
-    }
-	
+			[['name'], 'string', 'max' => 150],
+		];
+	}
+
 	//---------------------------------------------------------------------------
-    public function attributeLabels()
+	public function attributeLabels()
 	//---------------------------------------------------------------------------
-    {
-        return [
-            'uid' => 'GUID в 1с',
-            'name' =>'Название ДЦ',                   
-        ];
-    }
-	
+	{
+		return [
+			'uid' => 'GUID в 1с',
+			'name' => 'Название ДЦ',
+		];
+	}
+
 	//---------------------------------------------------------------------------
-    public static function findDealer($uid)
+	public static function findDealer($uid)
 	//---------------------------------------------------------------------------
-    {
-        return static::findOne($uid);
-    }
-	
+	{
+		$dealer = static::findOne($uid);
+
+		if (!$dealer)
+			throw new ServerErrorHttpException("Не удалось найти ДЦ {$uid}.");
+
+		return $dealer;
+	}
+
 	//---------------------------------------------------------------------------
 	public function beforeSave($insert)
 	//---------------------------------------------------------------------------
 	{
-		if(parent::beforeSave($insert))
-		{ 
+		if (parent::beforeSave($insert)) {
 			//
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
-	
-	
 }

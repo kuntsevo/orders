@@ -7,6 +7,7 @@ use frontend\traits\DataExtractor;
 use Yii;
 use \yii\db\ActiveRecord;
 use yii\helpers\Url;
+use yii\web\ServerErrorHttpException;
 
 class Staff extends ActiveRecord
 {
@@ -47,7 +48,12 @@ class Staff extends ActiveRecord
 	public static function findStaff($uid)
 	//---------------------------------------------------------------------------
 	{
-		return static::findOne($uid);
+		$staff = static::findOne($uid);
+
+		if (!$staff)
+			throw new ServerErrorHttpException("Не удалось найти сотрудника {$uid}.");
+
+		return $staff;
 	}
 
 	public function getPhotoThumb()

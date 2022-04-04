@@ -4,6 +4,7 @@ namespace frontend\models;
 
 use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
+use yii\web\ServerErrorHttpException;
 
 class Vehicles extends ActiveRecord
 {
@@ -42,7 +43,12 @@ class Vehicles extends ActiveRecord
 	public static function findVehicle($vin)
 	//---------------------------------------------------------------------------
 	{
-		return static::findOne($vin);
+		$vehicle = static::findOne($vin);
+
+		if (!$vehicle)
+			throw new ServerErrorHttpException("Не удалось найти автомобиль {$vin}.");
+
+		return $vehicle;
 	}
 
 	//---------------------------------------------------------------------------

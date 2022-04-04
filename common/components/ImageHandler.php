@@ -5,6 +5,8 @@ namespace common\components;
 use SplFileInfo;
 use Yii;
 use yii\base\BaseObject;
+use yii\base\ErrorException;
+use yii\web\ServerErrorHttpException;
 
 class ImageHandler extends BaseObject
 {
@@ -23,7 +25,7 @@ class ImageHandler extends BaseObject
 		parent::init();
 
 		if (!(file_exists($this->path)
-			and in_array((new SplFileInfo($this->path))->getExtension(),
+			&& in_array((new SplFileInfo($this->path))->getExtension(),
 				$this->image_extensions,
 				true
 			))) {
@@ -52,13 +54,16 @@ class ImageHandler extends BaseObject
 				$imageCreate = 'imageCreateFromPng';
 				break;
 			default:
-				// TODO ошибка
-				break;
+				throw new ServerErrorHttpException("Несуществующий тип изображения - {$imageType}");
 		}
 
 		$original = $imageCreate($this->path);
 
-		imageCopyResampled($thumb, $original, 0, 0, 0, 0, $new_width, $new_height, $imageWidth, $imageHeight);
+		try {
+			imageCopyResampled($thumb, $original, 0, 0, 0, 0, $new_width, $new_height, $imageWidth, $imageHeight);
+		} catch (ErrorException $e) {
+			throw new ServerErrorHttpException("Не удалось изменить размеры изображения. Ошибка: {$e->getName()}");
+		}
 
 		switch ($imageType) {
 			case IMG_JPG:
@@ -68,11 +73,15 @@ class ImageHandler extends BaseObject
 				$imageSave = 'imagePng';
 				break;
 			default:
-				// TODO ошибка
+				throw new ServerErrorHttpException("Несуществующий тип изображения - {$imageType}");
 				break;
 		}
 
-		$imageSave($thumb, Yii::getAlias("@webroot{$published_url}"), 100);
+		try {
+			$imageSave($thumb, Yii::getAlias("@webroot{$published_url}"), 100);
+		} catch (ErrorException $e) {
+			throw new ServerErrorHttpException("Не удалось сохранить изображение по адресу {$published_url}. Ошибка: {$e->getName()}");
+		}
 
 		imageDestroy($thumb);
 

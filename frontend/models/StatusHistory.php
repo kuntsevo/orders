@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use \yii\db\ActiveRecord;
+use yii\web\ServerErrorHttpException;
 
 class StatusHistory extends ActiveRecord
 {
@@ -44,9 +45,14 @@ class StatusHistory extends ActiveRecord
 
 	public static function getOrderStatusHistory(string $order_id)
 	{
-		return self::find()
+		$statusHistory = self::find()
 			->where(['order_id' => $order_id])
 			->orderBy('date, status_ordering')
 			->all();
+
+		if (is_null($statusHistory))
+			throw new ServerErrorHttpException("Не удалось получить данные об истории статусов заказа {$order_id}.");
+
+		return $statusHistory;
 	}
 }

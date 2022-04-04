@@ -1,26 +1,28 @@
 extends ../layouts/layout
 
 block content
-  +page-wrapper()
+  +page-wrapper('order__page')
     - var customer = order.customer;
-    .docs__header
+    .order__header
       .container
         a.back-link(href=_yii.app.urlHelper.to({0: '@orderItem', 'customer': customer.uid, 'order': order.uid}))
           +icon('back')
         h1.page-title #{order.getAttributeLabel(table_name)} 
-    .container
-      unless order[table_name]
-        h3.p-3 Нет данных
-      else          
-        table.table.mt-3
-          thead
-            tr
-              each alias, attribute_name in tableAttributes
-                th(scope='col')#{alias}
-          tbody
-            each row in order[table_name]
+    .order__content
+      .container
+        +warning()
+        unless order[table_name]
+          h3 Нет данных...
+        else          
+          table.table
+            thead
               tr
                 each alias, attribute_name in tableAttributes
-                  td #{row[attribute_name]}              
+                  th(scope='col')#{alias}
+            tbody
+              each row in order[table_name]
+                tr
+                  each alias, attribute_name in tableAttributes
+                    td #{row[attribute_name]}              
 
 block footer

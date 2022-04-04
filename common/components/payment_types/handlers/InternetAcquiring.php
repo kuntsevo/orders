@@ -35,7 +35,7 @@ class InternetAcquiring implements IPayment
             $data = trim($result['url']);
         } elseif ($result['message']) {
             $message = trim($result['message']);
-            Yii::$app->getSession()->setFlash('warning', $message);
+            Yii::$app->sessionHandler->sendWarning($message);
         }
 
         $response = Yii::$app->response;

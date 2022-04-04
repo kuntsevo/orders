@@ -23,6 +23,7 @@ block content
     .order__content
       .container
         .order__top
+          +warning()
           .order__top-mobile
             .order__line #{order.getAttributeLabel('repair_kind')}: #[span #{order.repair_kind}]
             .order__line #{order.getAttributeLabel('issuance_date')}: #[span #{order.IssuanceDate}]

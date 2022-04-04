@@ -4,6 +4,7 @@ namespace frontend\models;
 
 use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
+use yii\web\ServerErrorHttpException;
 
 class Customers extends ActiveRecord
 {
@@ -43,7 +44,11 @@ class Customers extends ActiveRecord
 	public static function findCustomer($uid)
 	//---------------------------------------------------------------------------
 	{
-		return static::findOne($uid);
+		$customer = static::findOne($uid);
+		if (is_null($customer))
+			throw new ServerErrorHttpException("Не удалось найти клиента по id {$uid}.");
+
+		return $customer;
 	}
 
 	//---------------------------------------------------------------------------

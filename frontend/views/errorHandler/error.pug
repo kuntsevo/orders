@@ -1,0 +1,25 @@
+extends ../layouts/layout
+
+block content
+  +page-wrapper('payments__page')
+    - var statusCode = exception.statusCode
+    - var unauthorized = statusCode === 401
+    
+    if unauthorized
+        - var message = 'Попробуйте перейти по активационной ссылке из СМС'
+    else
+        - var message = 'Попробуйте вернуться на главную страницу'
+
+    - var flashMessage = _yii.app.sessionHandler.getErrorMessage()
+    - var titleMessage = flashMessage ? flashMessage : 'Что-то пошло не так...'  
+
+    .payments__header
+        .container
+            h1.page-title= titleMessage
+    .container
+        .payments__list
+            .order__line= message
+        if !unauthorized
+            a.btn(href=_yii.app.urlHelper.to({0: '@orders', 'customer': customer_id})) Вернуться на главную
+
+block footer
