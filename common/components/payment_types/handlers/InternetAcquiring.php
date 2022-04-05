@@ -31,7 +31,7 @@ class InternetAcquiring implements IPayment
 
         $data = '';
 
-        if ($result['url']) {
+        if (isset($result['url'])) {
             $data = trim($result['url']);
         } elseif ($result['message']) {
             $message = trim($result['message']);
