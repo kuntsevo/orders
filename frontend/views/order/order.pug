@@ -52,7 +52,8 @@ block content
         .order__info
           .order__info-col
             .order__line #{order.getAttributeLabel('number')}: #[span #{order.number}]
-            .order__line #{vehicle.getAttributeLabel('vin')}: #[span #{vehicle.vin}]
+            if vehicle.vin != ''
+              .order__line #{vehicle.getAttributeLabel('vin')}: #[span #{vehicle.vin}]
             .order__line #{order.getAttributeLabel('works_cost')}: #[span #{_yii.app.formatter.asCurrency(order.works_cost)}]
             .order__line #{order.getAttributeLabel('goods_cost')}: #[span #{_yii.app.formatter.asCurrency(order.goods_cost)}]
           .order__info-col
