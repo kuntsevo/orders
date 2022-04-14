@@ -7,6 +7,7 @@ AppAsset::register($this);
 <?php $this->beginPage() ?>
 
 <head>
+    <?php $this->registerCsrfMetaTags() ?>
     <?php $this->head() ?>
 </head>
 

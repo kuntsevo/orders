@@ -3,11 +3,13 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\behaviors\AgreementsSigning;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use frontend\models\Orders;
 use frontend\models\Customers;
 use frontend\models\StatusHistory;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 use yii\web\UnauthorizedHttpException;
@@ -36,6 +38,13 @@ class OrderController extends Controller
 						'allow' => true,
 						'roles' => ['?'],
 					],
+				],
+			],
+			[
+				'class' => AgreementsSigning::class,
+				'requested_types' => [
+					'sopd',
+					'work_rules',
 				],
 			],
 		];
@@ -68,13 +77,16 @@ class OrderController extends Controller
 	{
 		$customer_id = Yii::$app->request->get('customer');
 
-		if (!$customer_id)
+		if (is_null($customer_id))
 			throw new UnauthorizedHttpException('В запросе отсутствует параметр "customer".');
 
 		$customer = Customers::findCustomer($customer_id);
 
 		$session = Yii::$app->session;
+		// TODO
 		$session->set('customer_id', $customer_id);
+		$session->set('phoneNumber', '+79998334974');
+		$session->set('authorizationCode', '7781');
 
 		$active_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$finished_orders = Orders::getArchivedOrdersByCustomer($customer_id);
@@ -92,7 +104,7 @@ class OrderController extends Controller
 	{
 		$order_id = Yii::$app->request->get('order');
 		if (is_null($order_id))
-			throw new NotFoundHttpException('В запросе отсутствует параметр "order".');
+			throw new ServerErrorHttpException('В запросе отсутствует параметр "order".');
 
 		$order = Orders::findOrderByUid($order_id);
 
@@ -194,24 +206,12 @@ class OrderController extends Controller
 	public function afterAction($action, $result)
 	//---------------------------------------------------------------------------
 	{
-		$result = parent::afterAction($action, $result);
-
 		$params = [
 			'_GET' => Yii::$app->request->get(),
 			'_POST' => Yii::$app->request->post(),
 		];
 
-		// модель для ведения лога
-		// $method_log = new MethodLog;
-		// $method_log->ip = $this->ip;	
-		// $method_log->method = $action->controller->id.'/'.$action->id;
-		// $method_log->params = json_encode($params);		
-		// $method_log->duration = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
-		// $method_log->referer = $this->referer;
-		// $method_log->started_at = $this->actionStartedAt;
-		// $method_log->save(false);
-
-		return $result;
+		return parent::afterAction($action, $result);
 	}
 
 	public function actionError()

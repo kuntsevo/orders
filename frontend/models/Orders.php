@@ -2,18 +2,19 @@
 
 namespace frontend\models;
 
-use frontend\traits\DataExtractor;
 use Yii;
-use yii\db\ActiveQuery;
+use frontend\behaviors\AgreementsSigning;
+use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-use yii\web\ServerErrorHttpException;
+use yii\web\NotFoundHttpException;
 
 class Orders extends ActiveRecord
 {
 	use DataExtractor;
 
-	private static $WORK_ORDER = 'ЗаказНаряд';
+	const WORK_ORDER = 'ЗаказНаряд';
+	const REPAIR_REQUEST = 'ЗаявкаНаРемонт';
 	private static $currentOrderType;
 
 	//---------------------------------------------------------------------------
@@ -30,6 +31,13 @@ class Orders extends ActiveRecord
 		return [
 			[['uid'], 'string', 'max' => 36],
 			[['number'], 'string', 'max' => 11],
+		];
+	}
+
+	public function behaviors()
+	{
+		return [
+			AgreementsSigning::class,
 		];
 	}
 
@@ -100,7 +108,7 @@ class Orders extends ActiveRecord
 	public function getActualStatus()
 	{
 		switch (self::$currentOrderType) {
-			case self::$WORK_ORDER:
+			case self::WORK_ORDER:
 				return $this->actualStatusFromHistory->alias;
 			default:
 				return $this->alias;
@@ -144,7 +152,7 @@ class Orders extends ActiveRecord
 		$orders = $orders->all();
 
 		if (is_null($orders))
-			throw new ServerErrorHttpException("Не удалось получить заказы клиента {$customer_id}, архивные - {$is_archived}.");
+			throw new NotFoundHttpException("Не удалось получить заказы клиента {$customer_id}, архивные - {$is_archived}.");
 
 		return $orders;
 	}
@@ -160,7 +168,7 @@ class Orders extends ActiveRecord
 		$order = $order->one();
 
 		if (!$order)
-			throw new ServerErrorHttpException("Не удалось найти заказ {$uid}.");
+			throw new NotFoundHttpException("Не удалось найти заказ {$uid}.");
 
 		return $order;
 	}
@@ -229,7 +237,7 @@ class Orders extends ActiveRecord
 	public function tableAttributesSequence(string $table_name): array
 	{
 		switch ($this->document_type) {
-			case self::$WORK_ORDER:
+			case self::WORK_ORDER:
 				return $this->workOrderTableAttributesSequence($table_name);
 				break;
 			default:

@@ -7,7 +7,7 @@ use frontend\traits\DataExtractor;
 use Yii;
 use \yii\db\ActiveRecord;
 use yii\helpers\Url;
-use yii\web\ServerErrorHttpException;
+use yii\web\NotFoundHttpException;
 
 class Staff extends ActiveRecord
 {
@@ -51,7 +51,7 @@ class Staff extends ActiveRecord
 		$staff = static::findOne($uid);
 
 		if (!$staff)
-			throw new ServerErrorHttpException("Не удалось найти сотрудника {$uid}.");
+			throw new NotFoundHttpException("Не удалось найти сотрудника {$uid}.");
 
 		return $staff;
 	}
@@ -62,7 +62,7 @@ class Staff extends ActiveRecord
 			return '';
 		}
 
-		$originalPath = Yii::getAlias("@webroot") . Yii::getAlias("@files/$this->photo");
+		$originalPath = Yii::getAlias("@webroot") . Yii::getAlias("@files/{$this->photo}");
 
 		if (file_exists(Yii::$app->assetManager->getPublishedPath($originalPath))) {
 			$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
@@ -98,6 +98,7 @@ class Staff extends ActiveRecord
 	{
 		$photoThumb = $this->photoThumb;
 		$this->photo = empty($photoThumb) ? Url::to('@staffPhotoBlanc') : $photoThumb;
+		
 		return parent::afterFind();
 	}
 }

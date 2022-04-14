@@ -64,6 +64,9 @@ return [
                 "<customer:$idPattern>/payment/<order:$idPattern>/<action>/<component:\w+>" => 'payment/<action>',
                 "<customer:$idPattern>/payment/<order:$idPattern>/<action>" => 'payment/<action>',
                 "<customer:$idPattern>/payment/<order:$idPattern>" => 'payment/index',
+                "<customer:$idPattern>/agreement" => 'agreement/index',
+                "agreement/signing" => 'agreement/signing',
+                "agreement/view/<view>" => 'agreement/view',
             ],
         ],
         'queue' => [
@@ -98,6 +101,7 @@ return [
         '@document' => 'document/show',
         '@payments' => 'payment/index',
         '@payment' => 'payment/pay',
+        '@agreements' => 'agreement/index',
         '@staffPhotoBlanc' => 'https://www.jespo.be/wp-content/uploads/2013/04/vrijwilliger-worden-01-3-1030x728.png',
         //---------------------------------------------------------------------------
         '@files' => '/uploads',
