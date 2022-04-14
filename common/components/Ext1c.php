@@ -68,7 +68,14 @@ class Ext1c extends Component
 	public function getJSON(string $base_id, array $config = [], bool $asArray = true)
 	{
 		$result = $this->httpService1CRequest($base_id, $config);
-		return Json::decode($result, $asArray);
+
+		try {
+			$result = Json::decode($result, $asArray);
+		} catch (ErrorException $e) {
+			throw $e;
+		}
+
+		return $result;
 	}
 
 	public function putJSON(string $base_id, array $body = [], bool $asArray = true)
@@ -80,7 +87,14 @@ class Ext1c extends Component
 		];
 
 		$result = $this->httpService1CRequest($base_id);
-		return Json::decode($result, $asArray);
+
+		try {
+			$result = Json::decode($result, $asArray);
+		} catch (ErrorException $e) {
+			throw $e;
+		}
+
+		return $result;
 	}
 
 	public function downloadFile(string $base_id, array $config = [])
@@ -120,7 +134,7 @@ class Ext1c extends Component
 		try {
 			$result = curl_exec($curl);
 		} catch (ErrorException $e) {
-			throw new ServerErrorHttpException($e->getName());
+			throw $e;
 		}
 
 		curl_close($curl);

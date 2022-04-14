@@ -8,7 +8,7 @@ function getDocument(url, fileName) {
     .done(function (path) {
       let link = document.createElement("a");
       link.href = path;
-      link.download = fileName;
+      link.target = "_blank";
       link.click();
     })
     .fail(function (err) {
@@ -89,12 +89,3 @@ homepageFilterBtns.forEach((elem) => {
     targetOrderList.removeAttribute("hidden");
   });
 });
-
-function openModalWindow(text = "") {
-  $("#modalWindow").modal(options);
-  // let myModal = new bootstrap.Modal(document.getElementById("modalWindow"), {
-  //   text: text,
-  // });
-
-  console.log(myModal);
-}

@@ -3,7 +3,7 @@
 namespace frontend\models;
 
 use \yii\db\ActiveRecord;
-use yii\web\ServerErrorHttpException;
+use yii\web\NotFoundHttpException;
 
 class Dealers extends ActiveRecord
 {
@@ -48,7 +48,7 @@ class Dealers extends ActiveRecord
 		$dealer = static::findOne($uid);
 
 		if (!$dealer)
-			throw new ServerErrorHttpException("Не удалось найти ДЦ {$uid}.");
+			throw new NotFoundHttpException("Не удалось найти ДЦ {$uid}.");
 
 		return $dealer;
 	}

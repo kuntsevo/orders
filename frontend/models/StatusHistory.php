@@ -3,7 +3,7 @@
 namespace frontend\models;
 
 use \yii\db\ActiveRecord;
-use yii\web\ServerErrorHttpException;
+use yii\web\NotFoundHttpException;
 
 class StatusHistory extends ActiveRecord
 {
@@ -51,7 +51,7 @@ class StatusHistory extends ActiveRecord
 			->all();
 
 		if (is_null($statusHistory))
-			throw new ServerErrorHttpException("Не удалось получить данные об истории статусов заказа {$order_id}.");
+			throw new NotFoundHttpException("Не удалось получить данные об истории статусов заказа {$order_id}.");
 
 		return $statusHistory;
 	}

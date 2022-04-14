@@ -3,7 +3,7 @@
 namespace frontend\models;
 
 use \yii\db\ActiveRecord;
-use yii\web\ServerErrorHttpException;
+use yii\web\NotFoundHttpException;
 
 class Bases extends ActiveRecord
 {
@@ -43,7 +43,7 @@ class Bases extends ActiveRecord
 		$base = static::findOne($id);
 
 		if (!$base)
-			throw new ServerErrorHttpException("Не удалось найти базу {$id}.");
+			throw new NotFoundHttpException("Не удалось найти базу {$id}.");
 
 		return $base;
 	}
