@@ -5,11 +5,15 @@ function getDocument(url, fileName) {
   $.ajax({
     url: url,
   })
-    .done(function (path) {
-      let link = document.createElement("a");
-      link.href = path;
-      link.target = "_blank";
-      link.click();
+    .done(function (data) {
+      if (data.filePath) {
+        let link = document.createElement("a");
+        link.href = data.filePath;
+        link.target = "_blank";
+        link.click();
+      } else {
+        // TODO
+      }
     })
     .fail(function (err) {
       // TODO

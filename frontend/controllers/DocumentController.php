@@ -15,7 +15,7 @@ use yii\web\ServerErrorHttpException;
 class DocumentController extends Controller
 {
 	private $_baseurl_redirect = 'https://kuntsevo.com';
-	
+
 	//---------------------------------------------------------------------------
 	public function behaviors()
 	//---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ class DocumentController extends Controller
 
 	public function actionShow()
 	{
-		if(!Yii::$app->request->isAjax){
+		if (!Yii::$app->request->isAjax) {
 			return $this->redirect(Yii::$app->request->referrer);
 		}
 
@@ -74,13 +74,24 @@ class DocumentController extends Controller
 		$order_id = Yii::$app->request->get('order');
 		$order = Orders::findOrderByUid($order_id);
 
-		$binairy = (new DocumentHandler())->download($order, $document_type);
+		$fileName = "{$order->number} {$document_type}.pdf";
 
-		if (!is_string($binairy) or empty($binairy)) {
-			throw new ServerErrorHttpException('Не удалось получить документ');
-		}
+		$originalPath = Yii::getAlias("@webroot") . Yii::getAlias("@files/{$fileName}");
 
-		return Yii::$app->response->sendContentAsFile($binairy, "$order->number $document_type.pdf");
+		if (file_exists(Yii::$app->assetManager->getPublishedPath($originalPath))) {
+			$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
+		} else {
+			$binairy = (new DocumentHandler())->download($order, $document_type);
+			file_put_contents($originalPath, $binairy);
+			$published_url = Yii::$app->assetManager->publish($originalPath)[1];
+		}		
+
+		$response = Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $response->data = ['filePath' => $published_url];
+
+        return $response->send();
+
 	}
 
 	//---------------------------------------------------------------------------
