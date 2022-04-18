@@ -40,13 +40,13 @@ class OrderController extends Controller
 					],
 				],
 			],
-			[
-				'class' => AgreementsSigning::class,
-				'requested_types' => [
-					'sopd',
-					'work_rules',
-				],
-			],
+			// [
+			// 	'class' => AgreementsSigning::class,
+			// 	'requested_types' => [
+			// 		'sopd',
+			// 		'work_rules',
+			// 	],
+			// ],
 		];
 	}
 
@@ -85,19 +85,15 @@ class OrderController extends Controller
 		$session = Yii::$app->session;
 		// TODO
 		$session->set('customer_id', $customer_id);
-		$session->set('phoneNumber', '+79998334974');
-		$session->set('authorizationCode', '7781');
+		// $session->set('phoneNumber', '+79999999999');
+		// $session->set('authorizationCode', '7781');
 
 		$active_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$finished_orders = Orders::getArchivedOrdersByCustomer($customer_id);
 
 		$this->view->title = 'История обслуживания';
 
-		return $this->render('index.pug', compact(
-			'active_orders',
-			'finished_orders',
-			'customer'
-		));
+		return $this->render('index.pug', compact('active_orders', 'finished_orders', 'customer'));
 	}
 
 	public function actionShow()
@@ -107,6 +103,15 @@ class OrderController extends Controller
 			throw new ServerErrorHttpException('В запросе отсутствует параметр "order".');
 
 		$order = Orders::findOrderByUid($order_id);
+
+		if ($order->is_child) {
+			$customer_id = Yii::$app->request->get('customer');
+			return $this->redirect(
+				Url::to(
+					['@orderItem', 'customer' => $customer_id, 'order' => $order->uid]
+				)
+			);
+		}
 
 		$this->view->title = "№{$order->number}";
 
@@ -227,6 +232,6 @@ class OrderController extends Controller
 			$customer_id = Yii::$app->sessionHandler->getCustomerId();
 		}
 
-		return $this->render('//errorHandler/error.pug', compact('exception', 'customer_id'));
+		return $this->render('//errors/error.pug', compact('exception', 'customer_id'));
 	}
 }

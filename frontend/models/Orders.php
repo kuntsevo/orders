@@ -6,6 +6,7 @@ use Yii;
 use frontend\behaviors\AgreementsSigning;
 use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
@@ -15,7 +16,8 @@ class Orders extends ActiveRecord
 
 	const WORK_ORDER = 'ЗаказНаряд';
 	const REPAIR_REQUEST = 'ЗаявкаНаРемонт';
-	private static $currentOrderType;
+
+	public $is_child;
 
 	//---------------------------------------------------------------------------
 	public static function primaryKey()
@@ -107,11 +109,11 @@ class Orders extends ActiveRecord
 
 	public function getActualStatus()
 	{
-		switch (self::$currentOrderType) {
+		switch ($this->document_type) {
 			case self::WORK_ORDER:
 				return $this->actualStatusFromHistory->alias;
 			default:
-				return $this->alias;
+				return $this->status;
 		}
 	}
 
@@ -144,9 +146,25 @@ class Orders extends ActiveRecord
 			]);
 		}
 
-		$orders = static::find()
-			->with(['dealer', 'vehicle'])
-			->where($condition);
+		$repairRequestQuery = static::find()
+			->where(array_merge($condition, ['document_type' => static::REPAIR_REQUEST]));
+		$repairRequestAlias = static::REPAIR_REQUEST;
+
+		$workOrdersQuery = static::find()
+			->where(array_merge($condition, ['document_type' => static::WORK_ORDER]));
+		$workOrdersAlias = static::WORK_ORDER;
+
+		$orders = $workOrdersQuery
+			->withQuery($workOrdersQuery->createCommand()->getRawSql(), $workOrdersAlias)
+			->withQuery($repairRequestQuery->createCommand()->getRawSql(), $repairRequestAlias)
+			->union(((new Query())->select("{$repairRequestAlias}.*")->from($repairRequestAlias))
+				->leftJoin($workOrdersAlias, "{$workOrdersAlias}.parent_id={$repairRequestAlias}.uid")
+				->where("CASE
+				WHEN {$repairRequestAlias}.document_type ='" . static::REPAIR_REQUEST . "'
+					 AND NOT {$workOrdersAlias}.uid IS NULL THEN 0
+				ELSE 1
+			END = 1"));
+
 		$orders = self::addActualStatus($orders);
 
 		$orders = $orders->all();
@@ -161,7 +179,25 @@ class Orders extends ActiveRecord
 	public static function findOrderByUid(string $uid): Orders
 	//---------------------------------------------------------------------------
 	{
-		$order = static::find()->where(['uid' => $uid]);
+		/**
+		 * если передаваемый uid - это uid документа-основания, то будет возвращен:
+		 * а) документ с этим основанием (за счет сортировки по вычисляемому полю "is_child")
+		 * б) самый поздний документ, если из одного документа-основания было создано несколько заказов
+		 * Если на основании передаваемого документа еще не было введено никакого другого,
+		 * то будет возращен сам документ.
+		 */
+		$tableName = static::tableName();
+		$order = static::find()
+			->select('*')
+			->addSelect(['is_child' => "CASE
+											WHEN [parent_id] = :uid0
+												THEN 1
+											ELSE 0
+										END"])
+			->where(['or', "[uid]=:uid1", "[parent_id]=:uid2"])
+			->orderBy('[is_child] DESC')
+			->addOrderBy("{$tableName}.[date] DESC")
+			->params([':uid0' => $uid, ':uid1' => $uid, ':uid2' => $uid]);
 
 		$order = self::addActualStatus($order);
 
@@ -200,8 +236,11 @@ class Orders extends ActiveRecord
 	private function attributeLabelsByDocumentType(): array
 	{
 		switch ($this->document_type) {
-			case self::$currentOrderType:
+			case self::WORK_ORDER:
 				return self::workOrderAttributeLabels();
+				break;
+			case self::REPAIR_REQUEST:
+				return self::repairRequestAttributeLabels();
 				break;
 			default:
 				return [];
@@ -232,6 +271,20 @@ class Orders extends ActiveRecord
 			'goods' => 'Товары',
 			'recommendations' => 'Рекомендации',
 		];
+	}
+
+	// для заявки на ремонт
+	private static function repairRequestAttributeLabels()
+	{
+		$currentLables = [
+			'number' => '№ заявки на ремонт',
+			'works_cost' => 'Сумма по работам (предв.)',
+			'goods_cost' => 'Сумма по товарам (предв.)',
+			'net_price' => 'Сумма ремонта без скидки (предв.)',
+			'amount' => 'Сумма ремонта (предв.)',
+		];
+
+		return array_merge(self::workOrderAttributeLabels(), $currentLables);
 	}
 
 	public function tableAttributesSequence(string $table_name): array
@@ -269,8 +322,6 @@ class Orders extends ActiveRecord
 
 	public function afterFind()
 	{
-		self::$currentOrderType = $this->document_type;
-
 		return parent::afterFind();
 	}
 }
