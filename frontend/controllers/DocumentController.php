@@ -77,7 +77,7 @@ class DocumentController extends Controller
 
 		$fileName = "{$order->number} {$document_type}.pdf";
 
-		$originalPath = Yii::getAlias("@runtime") . Yii::getAlias("\\{$fileName}");
+		$originalPath = Yii::getAlias("@webroot/assets") . Yii::getAlias("\\{$fileName}");
 
 		if (file_exists(Yii::$app->assetManager->getPublishedPath($originalPath))) {
 			$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
