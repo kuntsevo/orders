@@ -67,36 +67,21 @@ class DocumentController extends Controller
 
 	public function actionShow()
 	{
-		if (!Yii::$app->request->isAjax) {
-			return $this->redirect(Yii::$app->request->referrer);
-		}
+		// if (!Yii::$app->request->isAjax) {
+		// 	return $this->redirect(Yii::$app->request->referrer);
+		// }
 
 		$document_type = Yii::$app->request->get('component');
 		$order_id = Yii::$app->request->get('order');
 		$order = Orders::findOrderByUid($order_id);
 
-		$fileName = "{$order->number} {$document_type}.pdf";
+		$binairy = (new DocumentHandler())->download($order, $document_type);
 
-		$originalPath = Yii::getAlias("@webroot/assets") . Yii::getAlias("\\{$fileName}");
+		if (!is_string($binairy) or empty($binairy)) {
+			throw new ServerErrorHttpException('Не удалось получить документ');
+		}
 
-		if (file_exists(Yii::$app->assetManager->getPublishedPath($originalPath))) {
-			$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
-		} else {
-			$binairy = (new DocumentHandler())->download($order, $document_type);
-			try {
-				file_put_contents($originalPath, $binairy);
-				$published_url = Yii::$app->assetManager->publish($originalPath)[1];
-				unlink($originalPath);
-			} catch (ErrorException $e) {
-				throw $e;
-			}
-		}		
-
-		$response = Yii::$app->response;
-        $response->format = \yii\web\Response::FORMAT_JSON;
-        $response->data = ['filePath' => $published_url];
-
-        return $response->send();
+		return Yii::$app->response->sendContentAsFile($binairy, "$order->number $document_type.pdf");
 	}
 
 	//---------------------------------------------------------------------------
