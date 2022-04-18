@@ -70,19 +70,17 @@ class DocumentController extends Controller
 			return $this->redirect(Yii::$app->request->referrer);
 		}
 
-		// $document_type = Yii::$app->request->get('component');
-		// $order_id = Yii::$app->request->get('order');
-		// $order = Orders::findOrderByUid($order_id);
+		$document_type = Yii::$app->request->get('component');
+		$order_id = Yii::$app->request->get('order');
+		$order = Orders::findOrderByUid($order_id);
 
-		// $binairy = (new DocumentHandler())->download($order, $document_type);
+		$binairy = (new DocumentHandler())->download($order, $document_type);
 
-		// if (!is_string($binairy) or empty($binairy)) {
-		// 	throw new ServerErrorHttpException('Не удалось получить документ');
-		// }
+		if (!is_string($binairy) or empty($binairy)) {
+			throw new ServerErrorHttpException('Не удалось получить документ');
+		}
 
-		// return Yii::$app->response->sendContentAsFile($binairy, "$order->number $document_type.pdf");
-		$path = Yii::getAlias('@web') . Yii::getAlias('@files/О0000039298 work_order.pdf');
-		return $path;
+		return Yii::$app->response->sendContentAsFile($binairy, "$order->number $document_type.pdf");
 	}
 
 	//---------------------------------------------------------------------------
