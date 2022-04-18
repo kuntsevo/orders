@@ -26,17 +26,17 @@ class AgreementController extends Controller
 	//---------------------------------------------------------------------------
 	{
 		return [
-			// 'access' => [
-			// 	'class' => AccessControl::class,
-			// 	'only' => [],
-			// 	'rules' => [
-			// 		[
-			// 			'actions' => ['index', 'signing'],
-			// 			'allow' => true,
-			// 			'roles' => ['?'],
-			// 		],
-			// 	],
-			// ],
+			'access' => [
+				'class' => AccessControl::class,
+				'only' => [],
+				'rules' => [
+					[
+						'actions' => ['index', 'view', 'signing'],
+						'allow' => true,
+						'roles' => ['?'],
+					],
+				],
+			],
 		];
 	}
 
@@ -45,8 +45,9 @@ class AgreementController extends Controller
 	//---------------------------------------------------------------------------
 	{
 		return [
-			// 'index' => ['GET'],
-			// 'signing' => ['POST'],
+			'index' => ['GET'],
+			'view' => ['GET'],
+			'signing' => ['POST'],
 		];
 	}
 
