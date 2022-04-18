@@ -7,6 +7,7 @@ use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use frontend\models\Orders;
+use yii\base\ErrorException;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -76,14 +77,19 @@ class DocumentController extends Controller
 
 		$fileName = "{$order->number} {$document_type}.pdf";
 
-		$originalPath = Yii::getAlias("@webroot") . Yii::getAlias("@files/{$fileName}");
+		$originalPath = Yii::getAlias("@runtime") . Yii::getAlias("\\{$fileName}");
 
 		if (file_exists(Yii::$app->assetManager->getPublishedPath($originalPath))) {
 			$published_url = Yii::$app->assetManager->getPublishedUrl($originalPath);
 		} else {
 			$binairy = (new DocumentHandler())->download($order, $document_type);
-			file_put_contents($originalPath, $binairy);
-			$published_url = Yii::$app->assetManager->publish($originalPath)[1];
+			try {
+				file_put_contents($originalPath, $binairy);
+				$published_url = Yii::$app->assetManager->publish($originalPath)[1];
+				unlink($originalPath);
+			} catch (ErrorException $e) {
+				throw $e;
+			}
 		}		
 
 		$response = Yii::$app->response;
@@ -91,7 +97,6 @@ class DocumentController extends Controller
         $response->data = ['filePath' => $published_url];
 
         return $response->send();
-
 	}
 
 	//---------------------------------------------------------------------------
