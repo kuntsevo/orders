@@ -5,18 +5,16 @@ function getDocument(url, fileName) {
   $.ajax({
     url: url,
   })
-    .done(function (data) {
-      if (data.filePath) {
-        let link = document.createElement("a");
-        link.href = data.filePath;
-        link.target = "_blank";
-        link.click();
-      } else {
-        // TODO
-      }
+    .done(function(path) {
+      let link = document.createElement("a");
+      link.href = path;
+      link.download = fileName;
+      console.log(link);
+      link.click();
     })
     .fail(function (err) {
       // TODO
+      console.error(err);
     })
     .always(() => modalHandler.close());
 }
