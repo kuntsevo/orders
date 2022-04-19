@@ -11,6 +11,7 @@ use yii\web\ServerErrorHttpException;
 
 class Ext1c extends Component
 {
+	// const HOST = 'http://192.168.0.52';
 	const HOST = YII_ENV == 'prod' ? 'http://192.168.0.52' : 'http://192.168.0.66';
 	const GURL = 'orders';
 
@@ -135,6 +136,13 @@ class Ext1c extends Component
 			$result = curl_exec($curl);
 		} catch (ErrorException $e) {
 			throw $e;
+		}
+
+		$info = curl_getinfo($curl);
+
+		if ($info['http_code'] >= 400) {
+			curl_close($curl);
+			throw new ServerErrorHttpException();
 		}
 
 		curl_close($curl);
