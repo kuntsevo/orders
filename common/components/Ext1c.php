@@ -137,6 +137,13 @@ class Ext1c extends Component
 			throw $e;
 		}
 
+		$info = curl_getinfo($curl);
+
+		if ($info['http_code'] >= 400) {
+			curl_close($curl);
+			throw new ServerErrorHttpException();
+		}
+
 		curl_close($curl);
 
 		return $result;
