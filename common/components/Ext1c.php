@@ -11,7 +11,6 @@ use yii\web\ServerErrorHttpException;
 
 class Ext1c extends Component
 {
-	// const HOST = 'http://192.168.0.52';
 	const HOST = YII_ENV == 'prod' ? 'http://192.168.0.52' : 'http://192.168.0.66';
 	const GURL = 'orders';
 
