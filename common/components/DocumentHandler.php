@@ -18,7 +18,7 @@ class DocumentHandler extends BaseObject
 
 		$binairy = $request_handler->downloadFile($order->base_id, $config);
 
-		if (!is_string($binairy) or empty($binairy)) {
+		if (!is_string($binairy) or strlen($binairy) < 1000) {
 			throw new ServerErrorHttpException('Не удалось получить документ');
 		}
 

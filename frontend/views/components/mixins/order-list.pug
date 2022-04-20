@@ -11,7 +11,7 @@ mixin order-list(orderState)
             - var vehicle = order.vehicle
             .order__item        
                 .order__item-status #{order.actualStatus}
-                .order__item-id(hidden) #{order.uid}
+                .order__item-id(style='display: none') #{order.uid}
                 .order__item-title #{vehicle.model}
                 .order__item-row
                     .order__item-address
@@ -25,7 +25,7 @@ mixin order-list(orderState)
                     li #{order.getAttributeLabel('repair_kind')}: #[span #{order.repair_kind}]
                     li #{order.getAttributeLabel('issuance_date')}: #[span #{order.IssuanceDate}]
                     li.sum #{order.getAttributeLabel('amount_payable')}: #[span #{_yii.app.formatter.asCurrency(order.amountPayable)}]
-                a.btn(href=_yii.app.urlHelper.to({0: '@payments', 'customer': customer.uid, 'order': order.uid}) hidden) Оплатить
+                a.btn(href=_yii.app.urlHelper.to({0: '@payments', 'customer': customer.uid, 'order': order.uid}) style= order.is_archived ? 'display: none' : '') Оплатить
                 a.btn.btn-link(href=_yii.app.urlHelper.to({0: '@orderItem', 'customer': customer.uid, 'order': order.uid})) Подробнее
 
     block 

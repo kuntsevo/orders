@@ -4,14 +4,14 @@ block content
   +page-wrapper('homepage__page')
     .user__wrapper
       form.user__box
-        .user__box-inner.login.is-active(hidden)
+        .user__box-inner.login.is-active(style='display: none')
           .user__title Войти
           .user__label Адрес электронной почты
           input.user__input(type="text")
           .user__label Пароль
           input.user__input(type="password")
 
-        .user__box-inner.registration(hidden)
+        .user__box-inner.registration(style='display: none')
           .user__title Регистрация
           .user__label Ваше имя
           input.user__input(type="text" placeholder="")
@@ -33,7 +33,7 @@ block content
           else
             - var client_name = 'уважаемый клиент'
           .homepage__welcome Добрый день, #{client_name}
-          .request(hidden)           
+          .request(style='display: none')           
             button.request__btn.js-request(type="button")
               img.request__icon(src=_yii.app.urlHelper.to('@web/img/plus.svg') alt="")
               | Записаться на сервис
@@ -44,7 +44,7 @@ block content
                 .request__text Наш менеджер свяжется с&nbsp;вами по&nbsp;телефону +7(957)1234567
               button.request__close(type="button")
                 img(src=_yii.app.urlHelper.to('@web/img/close.svg') alt="")
-          .toolbar(hidden)
+          .toolbar(style='display: none')
             button.toolbar__toggle(type="button")
               img.img(src=_yii.app.urlHelper.to('@web/img/bar.svg') alt="")
             ul.toolbar__menu
@@ -67,14 +67,14 @@ block content
           .homepage__filter
             each filter in orderFilters
               button.homepage__filter-btn(class=filter.default ? 'is-active' : '' type="button" data-order-state=filter.id) #{filter.alias}
-          .homepage__alert(hidden)
+          .homepage__alert(style='display: none')
             .homepage__alert-icon !
             | По техническим причинам, работы приостановлены
         +warning()      
         each filter in orderFilters
-          .order__list(id=filter.id hidden=!filter.default)
+          .order__list(id=filter.id style= filter.default ? '' : 'display: none')
             +order-list(filter.id)             
 
-        a.order__promo(href="#" hidden) 20% скидка #[br]на малярные работы #[br]в феврале
+        a.order__promo(href="#" style='display: none') 20% скидка #[br]на малярные работы #[br]в феврале
 block footer
 
