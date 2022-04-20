@@ -85,9 +85,9 @@ homepageFilterBtns.forEach((elem) => {
     }
 
     orderList.forEach((orderItem) => {
-      orderItem.setAttribute("hidden", "");
+      orderItem.setAttribute("style", 'display: none');
     });
 
-    targetOrderList.removeAttribute("hidden");
+    targetOrderList.removeAttribute("style");
   });
 });
