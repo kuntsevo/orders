@@ -9,6 +9,7 @@ AppAsset::register($this);
 <head>
     <?php $this->registerCsrfMetaTags() ?>
     <?php $this->head() ?>
+    <?php if (YII_ENV == 'prod') $this->render('_counters') ?>
 </head>
 
 <?php $this->beginBody() ?>
