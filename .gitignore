@@ -43,8 +43,14 @@ phpunit.phar
 /backend/web/robots.txt
 .vscode/launch.json
 
+#/frontend/web/uploads/documents/*
+
 /frontend/web/uploads/*
 !/frontend/web/uploads/.keep
+!/frontend/web/uploads/documents
+/frontend/web/uploads/documents/*
+!/frontend/web/uploads/documents/.keep
+
 !/frontend/web/uploads/staffPhotoBlanc.png
 
 
