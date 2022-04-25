@@ -32,6 +32,7 @@ return [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'kuntsevo-orders',
             'timeout' => 86400 * 7,
+            'class' => 'yii\web\DbSession',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
