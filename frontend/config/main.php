@@ -30,6 +30,7 @@ return [
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
+            'class' => 'yii\web\DbSession',
             'name' => 'kuntsevo-orders',
             'timeout' => 86400 * 7,
             'class' => 'yii\web\DbSession',
