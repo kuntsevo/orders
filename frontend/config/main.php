@@ -34,6 +34,9 @@ return [
             'name' => 'kuntsevo-orders',
             'timeout' => 86400 * 7,
         ],
+        'assetManager' => [
+            'appendTimestamp' => true,
+        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
