@@ -2,10 +2,9 @@ extends ../layouts/layout
 
 block content
   +page-wrapper('docs__page')    
-    - var customer = order.customer;
     .docs__header
       .container
-        a.back-link(href=_yii.app.urlHelper.to({0: '@orderItem', 'customer': customer.uid, 'order': order.uid}))
+        a.back-link(href=_yii.app.urlHelper.to({0: '@orderItem', 'customer': customer_id, 'order': order_id}))
           +icon('back')
         h1.page-title Документы
     .container
@@ -14,13 +13,8 @@ block content
         unless document_list
           docs__list-item Нет доступных документов
         else
-          each label, document_key in document_list
+          each document in document_list
             li
-              - var url = _yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})
-              - var fileName = `${order.number} ${document_key}.pdf`
-              //- btn.docs__list-item(type="button" onClick=`getDocument('${url}', '${fileName}')`) #{label}
-              a.docs__list-item(href=_yii.app.urlHelper.to({0: '@document', 'customer': customer.uid, 'order': order.uid, 'component': document_key})) #{label}
+              a.docs__list-item(href=document.name target='_blank') #{document.alias}
 
-block modal
-  +long-operation-modal('Пожалуйста подождите. Получаем документ...')
 block footer

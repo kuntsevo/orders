@@ -33,6 +33,7 @@ return [
             'class' => 'yii\web\DbSession',
             'name' => 'kuntsevo-orders',
             'timeout' => 86400 * 7,
+            'class' => 'yii\web\DbSession',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

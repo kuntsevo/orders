@@ -2,12 +2,10 @@
 
 namespace frontend\controllers;
 
-use common\components\DocumentHandler;
+use frontend\models\Documents;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use frontend\models\Orders;
-use yii\base\ErrorException;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -27,7 +25,7 @@ class DocumentController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['index', 'show'],
+						'actions' => ['index'],
 						'allow' => true,
 						'roles' => ['?'],
 					],
@@ -42,7 +40,6 @@ class DocumentController extends Controller
 	{
 		return [
 			'index' => ['GET'],
-			'show' => ['GET'],
 		];
 	}
 
@@ -51,37 +48,16 @@ class DocumentController extends Controller
 	//---------------------------------------------------------------------------
 	{
 		$order_id = Yii::$app->request->get('order');
-		$order = Orders::findOrderByUid($order_id);
-		$document_list = (new DocumentHandler())->getDocumentTypes($order);
+		$customer_id = Yii::$app->request->get('customer');
 
-		if (!is_array($document_list)) {
-			throw new ServerErrorHttpException('Не удалось получить список печатных форм документа');
-		}
+		if (is_null($order_id))
+			throw new ServerErrorHttpException('В запросе отсутствует параметр "order".');
 
-		asort($document_list);
+		$document_list = Documents::getOrderDocuments($order_id);
 
 		$this->view->title = 'Документы';
 
-		return $this->render('documents.pug', compact('order', 'document_list'));
-	}
-
-	public function actionShow()
-	{
-		// if (!Yii::$app->request->isAjax) {
-		// 	return $this->redirect(Yii::$app->request->referrer);
-		// }
-
-		$document_type = Yii::$app->request->get('component');
-		$order_id = Yii::$app->request->get('order');
-		$order = Orders::findOrderByUid($order_id);
-
-		$binairy = (new DocumentHandler())->download($order, $document_type);
-
-		if (!is_string($binairy) or empty($binairy)) {
-			throw new ServerErrorHttpException('Не удалось получить документ');
-		}
-
-		return Yii::$app->response->sendContentAsFile($binairy, "$order->number $document_type.pdf");
+		return $this->render('documents.pug', compact('order_id', 'customer_id', 'document_list'));
 	}
 
 	//---------------------------------------------------------------------------
