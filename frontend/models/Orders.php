@@ -104,7 +104,11 @@ class Orders extends ActiveRecord
 
 	public function getAmountPayable()
 	{
-		return $this->amount - $this->payment_amount;
+		if (isset($this->amount, $this->payment_amount)) {
+			return $this->amount - $this->payment_amount;
+		} else {
+			return 0;
+		}
 	}
 
 	public function getActualStatus()
@@ -119,7 +123,11 @@ class Orders extends ActiveRecord
 
 	public function getIssuanceDate()
 	{
-		return $this->issuance_date ? Yii::$app->formatter->asDateTime($this->issuance_date) : '-';
+		if (isset($this->issuance_date)) {
+			return $this->issuance_date ? Yii::$app->formatter->asDateTime($this->issuance_date) : '-';
+		} else {
+			return 'Нет данных';
+		}
 	}
 	public static function getAllOrdersByCustomer(string $customer_id)
 	{
