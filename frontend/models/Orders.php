@@ -169,7 +169,8 @@ class Orders extends ActiveRecord
 				->leftJoin($workOrdersAlias, "{$workOrdersAlias}.parent_id={$repairRequestAlias}.uid")
 				->where("CASE
 				WHEN {$repairRequestAlias}.document_type ='" . static::REPAIR_REQUEST . "'
-					 AND NOT {$workOrdersAlias}.uid IS NULL THEN 0
+					 AND (NOT {$workOrdersAlias}.uid IS NULL
+					 	OR {$repairRequestAlias}.is_archived = 1) THEN 0
 				ELSE 1
 			END = 1"));
 
