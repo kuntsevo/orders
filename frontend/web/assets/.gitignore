@@ -1,2 +1,6 @@
 *
 !.gitignore
+!img
+!fonts
+!img/*
+!fonts/**
