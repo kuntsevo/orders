@@ -9,12 +9,12 @@ block content
           +icon('back')
         h1.page-title #{order.getAttributeLabel(table_name)} 
     .order__content
-      .container
+      .container.table-responsive-md
         +warning()
         unless order[table_name]
           h3 Нет данных...
         else          
-          table.table.table-hover.table-responsive-lg
+          table.table.table-hover
             thead
               tr
                 each alias, attribute_name in tableAttributes
