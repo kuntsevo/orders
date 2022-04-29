@@ -104,7 +104,11 @@ class Orders extends ActiveRecord
 
 	public function getAmountPayable()
 	{
-		return $this->amount - $this->payment_amount;
+		if (isset($this->amount, $this->payment_amount)) {
+			return $this->amount - $this->payment_amount;
+		} else {
+			return 0;
+		}
 	}
 
 	public function getActualStatus()
@@ -119,7 +123,11 @@ class Orders extends ActiveRecord
 
 	public function getIssuanceDate()
 	{
-		return $this->issuance_date ? Yii::$app->formatter->asDateTime($this->issuance_date) : '-';
+		if (isset($this->issuance_date)) {
+			return $this->issuance_date ? Yii::$app->formatter->asDateTime($this->issuance_date) : '-';
+		} else {
+			return 'Нет данных';
+		}
 	}
 	public static function getAllOrdersByCustomer(string $customer_id)
 	{
@@ -161,7 +169,8 @@ class Orders extends ActiveRecord
 				->leftJoin($workOrdersAlias, "{$workOrdersAlias}.parent_id={$repairRequestAlias}.uid")
 				->where("CASE
 				WHEN {$repairRequestAlias}.document_type ='" . static::REPAIR_REQUEST . "'
-					 AND NOT {$workOrdersAlias}.uid IS NULL THEN 0
+					 AND (NOT {$workOrdersAlias}.uid IS NULL
+					 	OR {$repairRequestAlias}.is_archived = 1) THEN 0
 				ELSE 1
 			END = 1"));
 
