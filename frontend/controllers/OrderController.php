@@ -40,13 +40,13 @@ class OrderController extends Controller
 					],
 				],
 			],
-			[
-				'class' => AgreementsSigning::class,
-				'requested_types' => [
-					'sopd',
-					'work_rules',
-				],
-			],
+			// [
+			// 	'class' => AgreementsSigning::class,
+			// 	'requested_types' => [
+			// 		'ПерсональныеДанные',
+			// 		'ПравилаРаботы',
+			// 	],
+			// ],
 		];
 	}
 
@@ -85,8 +85,8 @@ class OrderController extends Controller
 		$session = Yii::$app->session;
 		// TODO
 		$session->set('customer_id', $customer_id);
-		$session->set('phoneNumber', '+79999999999');
-		$session->set('authorizationCode', '7781');
+		// $session->set('phoneNumber', '+79999999999');
+		// $session->set('authorizationCode', '7781');
 
 		$active_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$finished_orders = Orders::getArchivedOrdersByCustomer($customer_id);
