@@ -18,17 +18,17 @@ class Agreements extends ActiveRecord
 	 * */
 	const NON_STORED_AGREEMENTS = [
 		[
-			'uid' => 'cookie',
-			'agreement_type' => 'cookie',
+			'uid' => 'Cookies',
+			'agreement_type' => 'Cookies',
 			'is_current' => 1,
 			'file_path' => '/agreement/view/cookiespolicy.pug',
 		],
 	];
 
 	private const ALIASES = [
-		'sopd' => 'Согласие на обработку персональных данных',
-		'work_rules' => 'Согласие с правилами работы',
-		'cookie' => 'Согласие на использование файлов cookie',
+		'ПерсональныеДанные' => 'Согласие на обработку персональных данных',
+		'ПравилаРаботы' => 'Согласие с правилами работы',
+		'Cookies' => 'Согласие на использование файлов cookie',
 	];
 
 	//---------------------------------------------------------------------------

@@ -1,22 +1,17 @@
 extends ../layouts/layout
 
 block content
-  +page-wrapper('docs__page') 
-    .docs__header
-      .container
-        h3 Для продолжения работы требуется Ваше согласие
-    .container
-      form(action=_yii.app.urlHelper.to({0: "agreement/signing"}) method="post")
+  +page-wrapper('homepage__page noscroll')
+    .user__wrapper.is-open
+      form.user__box(action=_yii.app.urlHelper.to({0: "agreement/signing"}) method="post")
         input(type="hidden", name=_yii.app.request.csrfParam value=_yii.app.request.csrfToken)
-        ul.order__links               
+        .user__box-inner.privacy.is-active
+          .user__subtitle Для продолжения необходимо принять условия использования          
           each agreement in agreements
-            li
-              .form-check
-                input.form-check-input(type="checkbox" name='agreements[]' value=agreement.uid checked)
-                a.order__link(href=agreement.file_path target="_blank")= agreement.alias
-        .order__sum
-          button.btn(type="submit") Согласен
+            .user__checkbox
+              input(id=agreement.uid type="checkbox" name='agreements[]' value=agreement.uid checked hidden)
+              label(for=agreement.uid) #[a(href=agreement.file_path target="_blank")= agreement.alias]
 
-block modal
-  +long-operation-modal('Пожалуйста подождите. Получаем документ...')
+        button.btn.js-login(type="submit") Продолжить
+
 block footer

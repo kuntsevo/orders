@@ -2,29 +2,24 @@ extends ../layouts/layout
 
 block content
   +page-wrapper('homepage__page')
-    .user__wrapper
+    .user__wrapper //.is-open
       form.user__box
-        .user__box-inner.login.is-active(style='display: none')
+        .user__box-inner.login.is-active
           .user__title Войти
-          .user__label Адрес электронной почты
-          input.user__input(type="text")
-          .user__label Пароль
-          input.user__input(type="password")
+          .user__label Код из смс
+          input.user__input(type="text" placeholder="123456")
 
-        .user__box-inner.registration(style='display: none')
-          .user__title Регистрация
-          .user__label Ваше имя
-          input.user__input(type="text" placeholder="")
-          .user__label Номер телефона
-          input.user__input(type="text" placeholder="+7(900)000-00-00")
-          .user__label Адрес электронной почты
-          input.user__input(type="text")
-          .user__label Пароль
-          input.user__input(type="password")
+        .user__box-inner.privacy
+          .user__subtitle Для продолжения необходимо принять условия использования
+          .user__checkbox
+            input#agree1(type="checkbox" checked hidden)
+            label(for="agree1") #[a(href="#" target="_blank") Согласие на обработку персональных данных], «Ставя отметку я подтверждаю, что даю свое согласие на сбор, передачу и обработку моих персональных данных в соответствие с Федеральным законом "О персональных данных" от 27.07.2006 N 152-ФЗ».
+          .user__checkbox
+            input#agree2(type="checkbox" checked hidden)
+            label(for="agree2") «Ставя отметку я подтверждаю, что ознакомлен и согласен: #[br]#[a(href="#" target="_blank") с правилами работы];  #[br]#[a(href="#" target="_blank") с использованием файлов cookies];  #[br]#[a(href="#" target="_blank") с порядком изменения заказ-наряда];  #[br]#[a(href="#" target="_blank") с правилами отплаты​»].
 
-        button.btn.js-logged(type="button") Продолжить
-        button.btn.btn-link.js-registration.is-active(type="button") Создать учетную запись
-        button.btn.btn-link.js-login(type="button") У меня есть аккаунт
+        button.btn.js-login(type="button") Продолжить
+        button.btn.btn-link.js-send-code.is-active(type="button") Получить код
     .homepage__header
       .container
         .homepage__header-top

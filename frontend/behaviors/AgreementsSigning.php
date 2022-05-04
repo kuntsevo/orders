@@ -14,7 +14,7 @@ class AgreementsSigning extends Behavior
 {
     const UNSIGNED_AGREEMENTS_KEY = 'unsignedAgreements';
     private const REQUESTED_CACHE_KEY = 'requestedOrders';
-    private const DEFAULT_REQUESTED_TYPES = ['cookie',];
+    private const DEFAULT_REQUESTED_TYPES = ['Cookies',];
 
     public $requested_types = [];
 

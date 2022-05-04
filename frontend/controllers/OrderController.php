@@ -43,8 +43,8 @@ class OrderController extends Controller
 			// [
 			// 	'class' => AgreementsSigning::class,
 			// 	'requested_types' => [
-			// 		'sopd',
-			// 		'work_rules',
+			// 		'ПерсональныеДанные',
+			// 		'ПравилаРаботы',
 			// 	],
 			// ],
 		];
