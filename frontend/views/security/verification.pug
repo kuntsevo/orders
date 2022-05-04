@@ -1,0 +1,15 @@
+extends ../layouts/layout
+
+block content
+    +page-wrapper('homepage__page noscroll')
+        .user__wrapper.is-open
+            form.user__box(action=_yii.app.urlHelper.to({0: "security/verification", 'customer': customer}) method="post")
+                input(type="hidden", name=_yii.app.request.csrfParam value=_yii.app.request.csrfToken)
+                .user__title Войти
+                .user__label Код из смс
+                input.user__input(type="text" placeholder="123456")
+
+                button.btn.js-login(type="submit") Продолжить
+                //- button.btn.btn-link.js-send-code.is-active(type="button") Получить код
+
+block footer
