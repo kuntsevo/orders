@@ -24,9 +24,10 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'frontend\models\Customers',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-kuntsevo', 'httpOnly' => true],
+            'loginUrl' => 'security/verification-form',
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -71,6 +72,8 @@ return [
                 "<customer:$idPattern>/agreement" => 'agreement/index',
                 "agreement/signing" => 'agreement/signing',
                 "agreement/view/<view>" => 'agreement/view',
+                "<customer:$idPattern>/security/verification" => 'security/verification',
+                "<customer:$idPattern>/security/verification-form" => 'security/verification-form',
             ],
         ],
         'queue' => [

@@ -4,9 +4,10 @@ namespace frontend\models;
 
 use frontend\traits\DataExtractor;
 use \yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 use yii\web\NotFoundHttpException;
 
-class Customers extends ActiveRecord
+class Customers extends ActiveRecord implements IdentityInterface
 {
 	use DataExtractor;
 
@@ -38,6 +39,30 @@ class Customers extends ActiveRecord
 			'last_name' => 'Фамилия',
 			'patronymic' => 'Отчество',
 		];
+	}
+
+	public static function findIdentity($id)
+	{
+		return static::findCustomer($id);
+	}
+
+	public function getId()
+	{
+		return $this->getPrimaryKey();
+	}
+
+	public function getAuthKey(): string
+	{
+		return $this->auth_key;
+	}
+
+	public function validateAuthKey($authKey)
+	{
+		return $this->getAuthKey() === $authKey;
+	}
+
+	public static function findIdentityByAccessToken($token, $type = null)
+	{
 	}
 
 	//---------------------------------------------------------------------------
