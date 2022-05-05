@@ -51,7 +51,7 @@ class Customers extends ActiveRecord implements IdentityInterface
 		return $this->getPrimaryKey();
 	}
 
-	public function getAuthKey(): string
+	public function getAuthKey()
 	{
 		return $this->auth_key;
 	}
