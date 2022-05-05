@@ -36,7 +36,7 @@ class OrderController extends Controller
 					[
 						'actions' => ['test', 'error', 'index', 'show', 'table', 'status-history'],
 						'allow' => true,
-						'roles' => ['?'],
+						'roles' => ['@'],
 					],
 				],
 			],
@@ -81,12 +81,12 @@ class OrderController extends Controller
 			throw new UnauthorizedHttpException('В запросе отсутствует параметр "customer".');
 
 		$customer = Customers::findCustomer($customer_id);
+		// Yii::$app->user->logout(false);
 
-		$session = Yii::$app->session;
-		// TODO
-		$session->set('customer_id', $customer_id);
-		// $session->set('phoneNumber', '+79999999999');
-		// $session->set('authorizationCode', '7781');
+		$isGuest = Yii::$app->user->isGuest;
+		if ($isGuest) {
+			return Yii::$app->user->loginRequired();
+		}	
 
 		$active_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$finished_orders = Orders::getArchivedOrdersByCustomer($customer_id);

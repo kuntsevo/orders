@@ -33,7 +33,6 @@ class AgreementController extends Controller
 					[
 						'actions' => ['index', 'view', 'signing'],
 						'allow' => true,
-						'roles' => ['?'],
 					],
 				],
 			],

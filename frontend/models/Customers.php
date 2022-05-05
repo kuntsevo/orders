@@ -3,9 +3,11 @@
 namespace frontend\models;
 
 use frontend\traits\DataExtractor;
+use Yii;
 use \yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
 
 class Customers extends ActiveRecord implements IdentityInterface
 {
@@ -61,12 +63,17 @@ class Customers extends ActiveRecord implements IdentityInterface
 		return $this->getAuthKey() === $authKey;
 	}
 
+	public function validateAuthCode(string $code): bool
+	{
+		return $code === InteractionLog::findLastAuthCode($this->uid);
+	}
+
 	public static function findIdentityByAccessToken($token, $type = null)
 	{
 	}
 
 	//---------------------------------------------------------------------------
-	public static function findCustomer($uid)
+	public static function findCustomer($uid): self
 	//---------------------------------------------------------------------------
 	{
 		$customer = static::findOne($uid);
@@ -85,5 +92,33 @@ class Customers extends ActiveRecord implements IdentityInterface
 			return true;
 		} else
 			return false;
+	}
+
+	public function beforeLogin($event)
+	//---------------------------------------------------------------------------
+	{
+		$code = trim(Yii::$app->request->post('code'));
+
+		if (is_null($code))
+			throw new UnauthorizedHttpException('В запросе отсутствует параметр "code".');
+
+		if (!($code && $this->validateAuthCode($code))) {
+			Yii::$app->sessionHandler->sendWarning("Неправильный код");
+			$event->isValid = false;
+			return;
+		}
+
+		$authPhoneNumber = InteractionLog::findAuthPhoneNumber($this->uid);
+
+		if (!$authPhoneNumber) {
+			throw new NotFoundHttpException("Не удалось получить номер телефона, использовавшийся для аутентификации клиента {$this->uid}.");
+		}
+	}
+
+	public function afterLogin($event)
+	{
+		$session = Yii::$app->session;
+		$session->set('authorizationCode', Yii::$app->request->post('code'));
+		$session->set('phoneNumber', trim(InteractionLog::findAuthPhoneNumber($this->uid)));
 	}
 }

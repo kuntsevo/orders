@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Customers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
@@ -58,7 +59,20 @@ class SecurityController extends Controller
 	public function actionVerification()
 	//---------------------------------------------------------------------------
 	{
-		return 'OK!';
+		$customer = Yii::$app->request->get('customer');
+
+		if (is_null($customer))
+			throw new UnauthorizedHttpException('В запросе отсутствует параметр "customer".');
+		
+		$identity = Customers::findCustomer($customer);
+		Yii::$app->user->on(Yii::$app->user::EVENT_BEFORE_LOGIN, [$identity, 'beforeLogin']);
+		Yii::$app->user->on(Yii::$app->user::EVENT_AFTER_LOGIN, [$identity, 'afterLogin']);
+
+		if (!Yii::$app->user->login($identity, 86400 * 14)){
+			return $this->render('verification.pug', compact('customer'));
+		}
+
+		return $this->redirect(Yii::$app->user->returnUrl);
 	}
 
 	//---------------------------------------------------------------------------

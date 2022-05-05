@@ -27,7 +27,7 @@ class DocumentController extends Controller
 					[
 						'actions' => ['index'],
 						'allow' => true,
-						'roles' => ['?'],
+						'roles' => ['@'],
 					],
 				],
 			],

@@ -30,7 +30,7 @@ class PaymentController extends Controller
 					[
 						'actions' => ['index', 'pay'],
 						'allow' => true,
-						'roles' => ['?'],
+						'roles' => ['@'],
 					],
 				],
 			],
