@@ -48,10 +48,7 @@ class SecurityController extends Controller
 	public function actionVerificationForm()
 	//---------------------------------------------------------------------------
 	{
-		$customer = Yii::$app->request->get('customer');
-
-		if (is_null($customer))
-			throw new UnauthorizedHttpException('В запросе отсутствует параметр "customer".');
+		$customer = Yii::$app->session->get('customer_id');
 
 		return $this->render('verification.pug', compact('customer'));
 	}

@@ -1,6 +1,7 @@
 <?php
 
 use common\components\SessionHandler;
+use common\filters\CodeVerification;
 use yii\helpers\Url;
 use yii\web\UrlNormalizer;
 
@@ -19,6 +20,13 @@ return [
     'bootstrap' => ['log', 'queue'],
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'order/index',
+    //---------------------------------------------------------------------------
+    // filters
+    'as codeVerification' => [
+        'class' => CodeVerification::class,
+        'except' => ['security/verification-form', 'security/verification', 'order/error'],
+    ],
+    //---------------------------------------------------------------------------
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -27,7 +35,7 @@ return [
             'identityClass' => 'frontend\models\Customers',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-kuntsevo', 'httpOnly' => true],
-            'loginUrl' => 'security/verification-form',
+            'loginUrl' => ['security/verification-form'],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -73,7 +81,7 @@ return [
                 "agreement/signing" => 'agreement/signing',
                 "agreement/view/<view>" => 'agreement/view',
                 "<customer:$idPattern>/security/verification" => 'security/verification',
-                "<customer:$idPattern>/security/verification-form" => 'security/verification-form',
+                "security/verification-form" => 'security/verification-form',
             ],
         ],
         'queue' => [

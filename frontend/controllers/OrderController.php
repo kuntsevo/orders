@@ -3,7 +3,6 @@
 namespace frontend\controllers;
 
 use Yii;
-use frontend\behaviors\AgreementsSigning;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use frontend\models\Orders;
@@ -34,9 +33,13 @@ class OrderController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'error', 'index', 'show', 'table', 'status-history'],
+						'actions' => ['test', 'index', 'show', 'table', 'status-history'],
 						'allow' => true,
 						'roles' => ['@'],
+					],
+					[
+						'actions' => ['error'],
+						'allow' => true,
 					],
 				],
 			],
@@ -81,12 +84,6 @@ class OrderController extends Controller
 			throw new UnauthorizedHttpException('В запросе отсутствует параметр "customer".');
 
 		$customer = Customers::findCustomer($customer_id);
-		// Yii::$app->user->logout(false);
-
-		$isGuest = Yii::$app->user->isGuest;
-		if ($isGuest) {
-			return Yii::$app->user->loginRequired();
-		}	
 
 		$active_orders = Orders::getActiveOrdersByCustomer($customer_id);
 		$finished_orders = Orders::getArchivedOrdersByCustomer($customer_id);
