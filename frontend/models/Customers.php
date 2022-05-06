@@ -65,7 +65,7 @@ class Customers extends ActiveRecord implements IdentityInterface
 
 	public function validateAuthCode(string $code): bool
 	{
-		return $code === InteractionLog::findLastAuthCode($this->uid);
+		return trim($code) === InteractionLog::findLastAuthCode($this->uid);
 	}
 
 	public static function findIdentityByAccessToken($token, $type = null)
@@ -95,9 +95,8 @@ class Customers extends ActiveRecord implements IdentityInterface
 	}
 
 	public function beforeLogin($event)
-	//---------------------------------------------------------------------------
 	{
-		$code = trim(Yii::$app->request->post('code'));
+		$code = Yii::$app->request->post('code');
 
 		if (is_null($code))
 			throw new UnauthorizedHttpException('В запросе отсутствует параметр "code".');
@@ -118,7 +117,7 @@ class Customers extends ActiveRecord implements IdentityInterface
 	public function afterLogin($event)
 	{
 		$session = Yii::$app->session;
-		$session->set('authorizationCode', Yii::$app->request->post('code'));
+		$session->set('authorizationCode', trim(Yii::$app->request->post('code')));
 		$session->set('phoneNumber', trim(InteractionLog::findAuthPhoneNumber($this->uid)));
 	}
 }
