@@ -48,7 +48,7 @@ class SecurityController extends Controller
 	public function actionVerificationForm()
 	//---------------------------------------------------------------------------
 	{
-		$customer = Yii::$app->session->get('customer_id');
+		$customer = Yii::$app->sessionHandler->getCustomerId();
 
 		return $this->render('verification.pug', compact('customer'));
 	}

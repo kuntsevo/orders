@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\behaviors\AgreementsSigning;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use frontend\models\Orders;
@@ -43,13 +44,13 @@ class OrderController extends Controller
 					],
 				],
 			],
-			// [
-			// 	'class' => AgreementsSigning::class,
-			// 	'requested_types' => [
-			// 		'ПерсональныеДанные',
-			// 		'ПравилаРаботы',
-			// 	],
-			// ],
+			[
+				'class' => AgreementsSigning::class,
+				'requested_types' => [
+					'ПерсональныеДанные',
+					'ПравилаРаботы',
+				],
+			],
 		];
 	}
 

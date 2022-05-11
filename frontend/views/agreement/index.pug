@@ -7,10 +7,10 @@ block content
         input(type="hidden", name=_yii.app.request.csrfParam value=_yii.app.request.csrfToken)
         .user__box-inner.privacy.is-active
           .user__subtitle Для продолжения необходимо принять условия использования          
-          each agreement in agreements
-            .user__checkbox
-              input(id=agreement.uid type="checkbox" name='agreements[]' value=agreement.uid checked hidden)
-              label(for=agreement.uid) #[a(href=agreement.file_path target="_blank")= agreement.alias]
+        each agreement in agreements
+          .user__checkbox
+            input(id=agreement.uid type="checkbox" name='agreements[]' value=agreement.uid checked hidden)
+            label(for=agreement.uid) #[a(href=agreement.file_path target="_blank")= agreement.alias]
 
         button.btn.js-login(type="submit") Продолжить
 

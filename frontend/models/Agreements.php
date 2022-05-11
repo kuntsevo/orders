@@ -164,7 +164,7 @@ class Agreements extends ActiveRecord
 			) {
 				$item = new Agreements();
 				$item->attributes = $agreement;
-				array_push($result, $item);
+				$result[] = $item;
 			}
 		}
 
@@ -173,7 +173,7 @@ class Agreements extends ActiveRecord
 
 	public static function getUnsignedAgreements(array $dealer_ids, string $customer_id, array $agreement_types = []): array
 	{
-		array_push($dealer_ids, ''); // всегда ищем также и по пустому значению дилерства
+		$dealer_ids[] = ''; // всегда ищем также и по пустому значению дилерства
 
 		$unsignedActualAgreements = self::getUnsignedActualAgreements($dealer_ids, $customer_id, $agreement_types);
 		$unsignedNonStoredAgreements = self::getUnsignedNonStoredAgreements($customer_id, $agreement_types);
@@ -187,8 +187,8 @@ class Agreements extends ActiveRecord
 			return '';
 		}
 
-		$fileName = "{$this->uid}.pdf";
-		$originalPath = Yii::getAlias("@webroot") . Yii::getAlias("@files/{$fileName}");
+		// $fileName = "{$this->uid}.pdf";
+		$originalPath = Yii::getAlias("@webroot") . Yii::getAlias("@files/{$this->file_path}");
 
 		if (!file_exists($originalPath)) {
 			return '';

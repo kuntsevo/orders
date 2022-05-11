@@ -116,8 +116,8 @@ class Customers extends ActiveRecord implements IdentityInterface
 
 	public function afterLogin($event)
 	{
-		$session = Yii::$app->session;
-		$session->set('authorizationCode', trim(Yii::$app->request->post('code')));
-		$session->set('phoneNumber', trim(InteractionLog::findAuthPhoneNumber($this->uid)));
+		$sessionHandler = Yii::$app->sessionHandler;
+		$sessionHandler->setAuthorizationCode(trim(Yii::$app->request->post('code')));
+		$sessionHandler->setPhoneNumber(trim(InteractionLog::findAuthPhoneNumber($this->uid)));
 	}
 }

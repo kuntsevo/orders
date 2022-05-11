@@ -21,9 +21,9 @@ class SessionHandler extends Component
         $this->session = Yii::$app->session;
     }
 
-    public function getCustomerId()
+    public function getCustomerId(): string
     {
-        $customer_id = $this->session->get(self::CUSTOMER_ID_NAME);
+        $customer_id = $this->session->get(self::CUSTOMER_ID_NAME) ?? Yii::$app->user->id;
 
         if (!$customer_id) {
             throw new UnauthorizedHttpException();
@@ -32,7 +32,17 @@ class SessionHandler extends Component
         return $customer_id;
     }
 
-    public function getPhoneNumber()
+    public function setCustomerId(string $id)
+    {
+        $this->session->set(self::CUSTOMER_ID_NAME, $id);
+    }
+
+    public function setPhoneNumber(string $phone)
+    {
+        $this->session->set(self::PHONE_NUMBER_NAME, $phone);
+    }
+
+    public function getPhoneNumber(): string
     {
         $phoneNumber = $this->session->get(self::PHONE_NUMBER_NAME);
 
@@ -43,7 +53,12 @@ class SessionHandler extends Component
         return $phoneNumber;
     }
 
-    public function getAuthorizationCode()
+    public function setAuthorizationCode(string $code)
+    {
+        $this->session->set(self::AUTHORIZATION_CODE_NAME, $code);
+    }
+
+    public function getAuthorizationCode(): string
     {
         $authorizationCode = $this->session->get(self::AUTHORIZATION_CODE_NAME);
 
@@ -74,7 +89,7 @@ class SessionHandler extends Component
         return $this->session->getFlash(self::ERROR_MESSAGE_KEY);
     }
 
-    public function getClientData()
+    public function getClientData(): array
     {
         $request = Yii::$app->request;
 

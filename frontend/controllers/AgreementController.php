@@ -64,7 +64,7 @@ class AgreementController extends Controller
 		$agreements = [];
 		foreach ($unsignedAgreements as $agreement) {
 			if ($agreement->file_path) {
-				array_push($agreements, $agreement);
+				$agreements[] = $agreement;
 			}
 		}
 
@@ -78,11 +78,7 @@ class AgreementController extends Controller
 	public function actionSigning()
 	{
 		$cache = Yii::$app->cache;
-		$agreements = Yii::$app->request->post('agreements');
-
-		if (is_null($agreements)) {
-			throw new ServerErrorHttpException('В запросе отсутствует параметр "agreements".');
-		}
+		$agreements = Yii::$app->request->post('agreements') ?? [];
 
 		$transaction = Yii::$app->getDb()->beginTransaction();
 		try {
