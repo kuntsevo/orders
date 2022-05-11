@@ -58,4 +58,4 @@ frontend
 vendor/                  contains dependent 3rd-party packages
 environments/            contains environment-based overrides
 ```
-[![Workflow status](https://github.com/pozys/order-kuntsevo/actions/workflows/lint.yml/badge.svg)](https://github.com/pozys/order-kuntsevo/actions)
+[![Workflow status](https://github.com/pozys/order-kuntsevo/actions/workflows/example.yml/badge.svg)](https://github.com/pozys/order-kuntsevo/actions)
