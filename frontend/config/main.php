@@ -118,7 +118,7 @@ return [
         '@payment' => 'payment/pay',
         '@agreements' => 'agreement/index',
         '@staffPhotoBlanc' => '/uploads/staffPhotoBlanc.png',
-        //---------------------------------------------------------------------------
+        //----------------------------------------------------------------------------
         '@files' => '/uploads',
     ],
     'params' => $params,
