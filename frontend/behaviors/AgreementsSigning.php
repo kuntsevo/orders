@@ -81,7 +81,7 @@ class AgreementsSigning extends Behavior
             return [];
         });
 
-        array_push($requestedOrders, $event->sender);
+        $requestedOrders[] = $event->sender;
 
         $cache->set(static::REQUESTED_CACHE_KEY, $requestedOrders);
     }

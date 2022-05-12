@@ -67,6 +67,7 @@ return [
                 'action' => UrlNormalizer::ACTION_REDIRECT_TEMPORARY,
             ],
             'rules' => [
+                "test" => 'order/test',
                 "order/error" => 'order/error',
                 "<customer:$idPattern>/order/<order:$idPattern>/<action>/<component:\w+>" => 'order/<action>',
                 "<customer:$idPattern>/order/<order:$idPattern>/<action>" => 'order/<action>',

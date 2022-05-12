@@ -14,7 +14,7 @@ class CodeVerification extends ActionFilter
         if (is_null($customer_id))
             throw new UnauthorizedHttpException('В сессии и/или запросе отсутствует параметр id пользователя.');
 
-        // если текущий пользователь отличается от того, что сохранен в сесси, то разлогинимся, чтобы зайти заново
+        // если текущий пользователь отличается от того, что сохранен в сессии, то разлогинимся, чтобы зайти заново
         if ($customer_id !== Yii::$app->sessionHandler->getCustomerId()) {
             Yii::$app->user->logout();
         }

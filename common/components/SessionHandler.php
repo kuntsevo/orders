@@ -21,13 +21,9 @@ class SessionHandler extends Component
         $this->session = Yii::$app->session;
     }
 
-    public function getCustomerId(): string
+    public function getCustomerId(): ?string
     {
         $customer_id = $this->session->get(self::CUSTOMER_ID_NAME) ?? Yii::$app->user->id;
-
-        if (!$customer_id) {
-            throw new UnauthorizedHttpException();
-        }
 
         return $customer_id;
     }

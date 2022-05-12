@@ -34,12 +34,12 @@ class OrderController extends Controller
 				'only' => [],
 				'rules' => [
 					[
-						'actions' => ['test', 'index', 'show', 'table', 'status-history'],
+						'actions' => ['index', 'show', 'table', 'status-history'],
 						'allow' => true,
 						'roles' => ['@'],
 					],
 					[
-						'actions' => ['error'],
+						'actions' => ['test', 'error'],
 						'allow' => true,
 					],
 				],
@@ -72,7 +72,7 @@ class OrderController extends Controller
 	public function actionTest()
 	//---------------------------------------------------------------------------
 	{
-		echo 'WORK(' . YII_DEBUG . ')';
+		return 'WORK(' . YII_DEBUG . ')';
 	}
 
 	//---------------------------------------------------------------------------
@@ -133,7 +133,6 @@ class OrderController extends Controller
 
 	public function actionStatusHistory()
 	{
-
 		$order_id = Yii::$app->request->get('order');
 		if (is_null($order_id))
 			throw new NotFoundHttpException('В запросе отсутствует параметр "order".');

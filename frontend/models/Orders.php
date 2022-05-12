@@ -301,10 +301,8 @@ class Orders extends ActiveRecord
 		switch ($this->document_type) {
 			case self::WORK_ORDER:
 				return $this->workOrderTableAttributesSequence($table_name);
-				break;
 			default:
 				return [];
-				break;
 		}
 	}
 
